@@ -1,1 +1,0 @@
-inclua o BootStrap.min.css para o CSS e  BootStrap.min.js para JavaScript

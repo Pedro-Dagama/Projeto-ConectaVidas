@@ -21,6 +21,7 @@
       </div>
     </div>
   </section>
+  <a href="/?url=login" class="btn btn-primary mt-3">Fazer Login</a>
 </div>
 
 <?php include __DIR__ . '/../../Components/footer.php'; ?>

@@ -1,5 +1,4 @@
 :root{
-  --primary: pink;
   --gray-100: #e6e9f0;
   --gray-200: #cdd3e1;
   --gray-300: #aab3cc;
@@ -11,7 +10,7 @@
   --gray-900: #0a0f1a;
 
   --primary-light: #4de7b7;
-  --primary: #0da170;
+  --primary: #FF6C02;
   --primary-dark: #065f46;
 
   --link-color: #10b981;

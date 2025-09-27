@@ -11,7 +11,7 @@
 <body>
   <main class="login-container">
     <section class="login-box">
-      <h1 class="login-title">Empresas</h1>
+      <h1 class="login-title">Ongs</h1>
       <p class="login-subtitle">Entre com sua conta para continuar</p>
 
       <form class="form-login" action="#" method="post">

@@ -1,0 +1,151 @@
+
+* {
+  font-family: Roboto,'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f0f2f5, #d9e3f0);
+}
+
+/* Container  */
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+/* Caixa de login */
+.login-box {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Título */
+.login-title {
+  color: var(--primary);
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.login-subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+/* Formulário */
+.form-login .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-login label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-login input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-login input:focus {
+  border-color: #1877f2;
+  box-shadow: 0 0 5px rgba(24,119,242,0.3);
+  outline: none;
+}
+
+/* Botões */
+.btn-login, .btn-create-account {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-login {
+  background-color: var(--primary);
+  color: #fff;
+  margin-bottom: 10px;
+  transition: all 1s;
+}
+
+.btn-login:hover {
+  background-color: #FAB12F;
+}
+
+.btn-create-account {
+  background-color:var(--primary);
+  color: #fff;
+  margin-top: 15px;
+    transition: all 1s;
+}
+
+.btn-create-account:hover {
+  background-color: #FAB12F;
+}
+
+
+.forgot-password {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #1877f2;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: #999;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.divider:not(:empty)::before {
+  margin-right: .75em;
+}
+
+.divider:not(:empty)::after {
+  margin-left: .75em;
+}
+
+
+@media (max-width: 450px) {
+  .login-box {
+    padding: 30px 20px;
+  }
+
+  .login-title {
+    font-size: 1.8rem;
+  }
+}

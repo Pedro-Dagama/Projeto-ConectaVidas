@@ -2,19 +2,16 @@
 
 namespace Controllers;
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-use Models\UserModel;
+use Repositories\UserRepository;
+use Config\Database;
 
 class LoginController
 {
-    private $userModel;
+    private $userRepository;
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
+        $this->userRepository = new UserRepository(Database::getConnection());
     }
 
     public function showLoginForm($error = null)
@@ -26,29 +23,31 @@ class LoginController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
-            $senha = $_POST['senha'] ?? '';
+            $password = $_POST['senha'] ?? '';
 
-            $user = $this->userModel->getUserByEmail($email);
-
-            if ($user && password_verify($senha, $user['senha'])) {
-                // salvar dados do usuário na sessão (sem a senha)
-                unset($user['senha']);
-                $_SESSION['user'] = $user;
-                /* header('Location: /?url=home'); */
+            $user = $this->userRepository->findByEmail($email);
+            if ($user && password_verify($password, $user->getSenha())) {
+                if (session_status() === PHP_SESSION_NONE) session_start();
+                $_SESSION['user'] = [
+                    'id' => $user->getId(),
+                    'nome' => $user->getNome(),
+                    'email' => $user->getEmail(),
+                    'tipo_usuario' => $user->getTipoUsuario(),
+                ];
                 header('Location: /?url=home_logged');
                 exit();
             } else {
-                $error = 'Email ou senha inválidos.';
+                $error = "Email ou senha inválidos.";
                 $this->showLoginForm($error);
             }
         } else {
-            $error = "Email ou senha inválidos.";
-            $this->showLoginForm($error);
+            $this->showLoginForm();
         }
     }
 
     public function logout()
     {
+        if (session_status() === PHP_SESSION_NONE) session_start();
         session_destroy();
         header('Location: /?url=login');
         exit();

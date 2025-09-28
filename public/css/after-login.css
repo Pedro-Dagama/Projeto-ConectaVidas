@@ -1,0 +1,27 @@
+* {
+  font-family: Roboto;
+}
+
+body {
+  background: linear-gradient(135deg, #f0f2f5, #d9e3f0);
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1;
+}
+.main-header {
+  background-color: var(--primary);
+  padding: 1rem;
+}
+.main-footer {
+  background-color: var(--primary);
+}
+
+.columm-orange {
+  background-color: var(--primary);
+}
+
+.bg-orange{
+  background-color: var(--primary)
+}

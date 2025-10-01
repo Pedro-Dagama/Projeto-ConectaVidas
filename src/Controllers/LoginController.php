@@ -34,7 +34,12 @@ class LoginController
                     'email' => $user->getEmail(),
                     'tipo_usuario' => $user->getTipoUsuario(),
                 ];
-                header('Location: /?url=home_logged');
+
+                if ($user->getTipoUsuario() === 'empresa') {
+                    header('Location: /?url=empresa');
+                } elseif ($user->getTipoUsuario() === 'ong') {
+                    header('Location: /?url=ong');
+                }
                 exit();
             } else {
                 $error = "Email ou senha inválidos.";
@@ -49,7 +54,7 @@ class LoginController
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         session_destroy();
-        header('Location: /?url=login');
+        header('Location: /?url=home');
         exit();
     }
 }

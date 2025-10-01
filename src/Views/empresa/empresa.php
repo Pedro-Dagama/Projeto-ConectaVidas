@@ -1,11 +1,9 @@
 <?php include __DIR__ . '/../../Components/header.php'; ?>
 
 <div class="container mt-5">
-    <?php
-    $nome = htmlspecialchars($_SESSION['user']['nome']);
-    echo "<h1>Bem-vindo, $nome!</h1>";
-    ?>
-    <p>Você está logado no sistema ConectaVidas.</p>
+    <?php $tipoUsuario = $_SESSION['user']['tipo_usuario'] ?? '' ?>
+    <h1><?= htmlspecialchars($tipoUsuario) ?></h1>
+    <p>Você está logado no sistema ConectaVidas.(empresa)</p>
     <a href="/?url=logout" class="btn btn-danger mt-3">Sair</a>
 </div>
 

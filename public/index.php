@@ -25,8 +25,11 @@ switch ($url) {
     case 'login/authenticate':
         (new LoginController())->authenticate();
         break;
-    case 'home_logged':
-        (new HomeController())->logged();
+    case 'empresa':
+        (new HomeController())->empresa();
+        break;
+    case 'ong':
+        (new HomeController())->ong();
         break;
     case 'logout':
         (new LoginController())->logout();

@@ -4,29 +4,33 @@ namespace Models;
 
 class User
 {
-    private $id;
+    private $id_usuario;
     private $nome;
     private $email;
     private $senha;
     private $tipo_usuario;
+    private $criado_em;
+    private $atualizado_em;
 
-    public function __construct($id, $nome, $email, $senha, $tipo_usuario)
+    public function __construct($id_usuario, $nome, $email, $senha, $tipo_usuario, $criado_em, $atualizado_em)
     {
-        $this->id = $id;
+        $this->id_usuario = $id_usuario;
         $this->nome = $nome;
         $this->email = $email;
         $this->senha = $senha;
         $this->tipo_usuario = $tipo_usuario;
+        $this->criado_em = $criado_em;
+        $this->atualizado_em = $atualizado_em;
     }
 
-    public function getId()
+    public function getIdUsuario()
     {
-        return $this->id;
+        return $this->id_usuario;
     }
 
-    public function setId($id)
+    public function setIdUsuario($id_usuario)
     {
-        $this->id = $id;
+        $this->id_usuario = $id_usuario;
     }
 
     public function getNome()
@@ -67,5 +71,25 @@ class User
     public function setTipoUsuario($tipo_usuario)
     {
         $this->tipo_usuario = $tipo_usuario;
+    }
+
+    public function getCriadoEm()
+    {
+        return $this->criado_em;
+    }
+
+    public function setCriadoEm($criado_em)
+    {
+        $this->criado_em = $criado_em;
+    }
+
+    public function getAtualizadoEm()
+    {
+        return $this->atualizado_em;
+    }
+
+    public function setAtualizadoEm($atualizado_em)
+    {
+        $this->atualizado_em = $atualizado_em;
     }
 }

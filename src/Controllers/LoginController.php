@@ -29,10 +29,12 @@ class LoginController
             if ($user && password_verify($password, $user->getSenha())) {
                 if (session_status() === PHP_SESSION_NONE) session_start();
                 $_SESSION['user'] = [
-                    'id' => $user->getId(),
+                    'id_usuario' => $user->getIdUsuario(),
                     'nome' => $user->getNome(),
                     'email' => $user->getEmail(),
                     'tipo_usuario' => $user->getTipoUsuario(),
+                    'criado_em' => $user->getCriadoEm(),
+                    'atualizado_em' => $user->getAtualizadoEm()
                 ];
 
                 if ($user->getTipoUsuario() === 'empresa') {

@@ -1,4 +1,4 @@
-<?php>
+<?php
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -322,4 +322,4 @@
     <script src="../../../public/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
-</php>
+?>

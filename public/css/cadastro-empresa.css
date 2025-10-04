@@ -9,7 +9,7 @@ main {
 
 .imagem-cadastro {
   flex: 1;
-  background: url("../../../public/img/co-ft1.png") no-repeat center center;
+  background: no-repeat center center;
   background-size: cover;
   position: relative;
 }

@@ -136,4 +136,7 @@ fabric.properties
 .history
 .ionide
 
+# Composer
+/vendor/
+
 # End of https://www.toptal.com/developers/gitignore/api/phpstorm,visualstudiocode,dotenv

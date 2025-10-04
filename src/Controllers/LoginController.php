@@ -41,6 +41,8 @@ class LoginController
                     header('Location: /?url=empresa');
                 } elseif ($user->getTipoUsuario() === 'ong') {
                     header('Location: /?url=ong');
+                } elseif ($user->getTipoUsuario() === 'administrador') {
+                    header('Location: /?url=admin');
                 }
                 exit();
             } else {

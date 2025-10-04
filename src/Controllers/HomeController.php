@@ -29,6 +29,16 @@ class HomeController
         require_once __DIR__ . '/../Views/ong/ong.php';
     }
 
+    public function admin()
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (empty($_SESSION['user']) || $_SESSION['user']['tipo_usuario'] !== 'administrador') {
+            header('Location: /?url=login');
+            exit();
+        }
+        require_once __DIR__ . '/../Views/admin/admin.php';
+    }
+
     public function logged()
     {
         if (session_status() === PHP_SESSION_NONE) {

@@ -31,11 +31,17 @@ switch ($url) {
     case 'ong':
         (new HomeController())->ong();
         break;
+    case 'admin':
+        (new HomeController())->admin();
+        break;
     case 'logout':
         (new LoginController())->logout();
         break;
     case 'register':
         (new RegisterController())->showRegisterForm();
+        break;
+    case 'register/create':
+        (new RegisterController())->create();
         break;
     default:
         echo "Página não encontrada";

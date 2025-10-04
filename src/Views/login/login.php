@@ -1,9 +1,17 @@
 <?php include __DIR__ . '/../../Components/header.php'; ?>
-<?php if (!empty($error)): ?>
-    <div class="alert alert-danger text-center mt-3" role="alert">
-        <?= htmlspecialchars($error) ?>
+
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!empty($_SESSION['success_message'])): ?>
+    <div class="alert alert-success text-center mt-3" role="alert">
+        <?= htmlspecialchars($_SESSION['success_message']) ?>
     </div>
-<?php endif; ?>
+<?php
+    unset($_SESSION['success_message']);
+endif;
+?>
 
 <div class="d-flex justify-content-center align-items-center vh-100">
     <form action="/?url=login/authenticate" method="POST" class="p-5 border rounded shadow" style="min-width: 320px; max-width: 400px; width: 100%;">
@@ -23,7 +31,6 @@
 
         <div class="d-flex justify-content-between">
             <a href="#" class="text-decoration-none">Esqueceu a senha?</a>
-            <!-- <a href="#" class="btn btn-outline-secondary btn-sm">Criar conta</a> -->
             <a href="/?url=register" class="btn btn-outline-secondary btn-sm">Criar conta</a>
         </div>
     </form>

@@ -1,4 +1,4 @@
-/* ===== Global ===== */
+
 * {
   font-family: Roboto, sans-serif;
   margin: 0;
@@ -10,65 +10,11 @@ body,
 .card,
 .navbar,
 footer {
-  transition: background-color 0.3s, color 0.3s;
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
-body,
-html {
-  height: 100%;
-}
 
-/* ===== Main Body and Layout (Sticky Footer) ===== */
-body {
-  /* Estas classes (d-flex, flex-column, min-vh-100) já estão no seu HTML e 
-     são essenciais para o "Rodapé Pegajoso" funcionar. */
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
 
-/* ===== Main Content (Ajuste para Header Fixo) ===== */
-main {
-  /* flex: 1 0 auto; garante que o MAIN cresça e empurre o footer para baixo */
-  flex: 1 0 auto; 
-  /* Apenas padding-top é necessário para compensar a altura do Header FIXO */
-  padding-top: 100px; 
-  /* padding-bottom é removido ou zerado, pois o footer NÃO é mais fixo. */
-  padding-bottom: 0; 
-}
 
-/* ===== Header (Apenas para garantir o z-index e posicionamento) ===== */
-.main-header .fixed-top {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1100;
-}
 
-/* ===== Footer (Posição normal e z-index mais baixo) ===== */
-/* O footer não precisa de 'position: fixed' ou alto z-index, pois está no fluxo normal */
-footer {
-  background-color: #333; 
-  color: #fff;
-  z-index: 1000; /* Pode ser menor */
-  padding: 1rem 0;
-}
 
-/* Links do footer */
-footer a {
-  color: inherit;
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
-}
-
-/* ===== Ajuste Responsivo (Se necessário, mas menos crítico sem footers fixos) ===== */
-@media (max-width: 767.98px) {
-  /* Você pode adicionar padding-top maior aqui se o header mobile for mais alto que 100px */
-  /* main {
-    padding-top: 120px; 
-  } */
-}

@@ -1,48 +1,20 @@
+
 * {
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body {
-  background: #fdf8f8;
-  display: flex;
-  flex-direction: column;
-}
-main {
-  flex: 1;
+body,
+.card,
+.navbar,
+footer {
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 
-.main-header {
-  background-color: #ffffff;
-/*box-shadow: -1px 13px 24px -15px rgba(0,0,0,0.08);
--webkit-box-shadow: -1px 13px 24px -15px rgba(0, 0, 0, 0.05);
--moz-box-shadow: -1px 13px 24px -15px rgba(0,0,0,0.08);*/
-  padding: 1rem;
-}
 
-.logo span{
-  color: var(--primary);
 
-  text-shadow: rgba(0, 0, 0, 0.418) 1px 1px 4px ;
-}
 
-.menu-user{
-  background-color: var(--primary);
-  padding:  5px ;
-  border-radius: .7rem;
-}
-.main-footer {
-  background-color: var(--primary);
-}
 
-.columm-orange {
-  background-color: var(--primary);
-}
-
-.bg-orange{
-  background-color: var(--primary)
-}
-
-.txt-columm{
-  background-color: var(--primary);
-}

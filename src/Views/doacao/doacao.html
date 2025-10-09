@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ConectaVidas+</title>
+    <link rel="stylesheet" href="../../../public/css/global.css" />
+    <link rel="stylesheet" href="../../../public/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="../../../public/css/after-login.css" />
+  </head>
+
+  <body class="d-flex flex-column min-vh-100 bg-body">
+    <!-- Header Responsivo -->
+    <header class="main-header">
+      <!-- Navbar Desktop -->
+      <div
+        class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm"
+      >
+        <div class="d-flex align-items-center me-4">
+          <a href="#" class="text-decoration-none text-body">
+            <span class="fw-bold fs-1">ConectaVidas+</span>
+          </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-4 ms-auto">
+          <!-- Alternar Tema -->
+          <button
+            class="theme-toggle btn btn-outline-secondary fs-5"
+            title="Alternar Tema"
+            aria-label="Alternar tema claro/escuro"
+          >
+            <i class="bi bi-moon-fill"></i>
+          </button>
+
+          <!-- Menu do Usuário -->
+          <div class="dropdown menu-user p-2" data-bs-theme="light">
+            <a
+              href="#"
+              class="d-flex align-items-center text-decoration-none dropdown-toggle text-body"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              aria-label="Menu do usuário"
+            >
+              <span class="me-2 fw-bold fs-5">Empresa</span>
+              <img
+                src="https://github.com/mdo.png"
+                alt="avatar"
+                width="40"
+                height="40"
+                class="rounded-circle"
+              />
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end fs-5">
+              <li><a class="dropdown-item" href="#">Novo projeto</a></li>
+              <li><a class="dropdown-item" href="#">Configurações</a></li>
+              <li><a class="dropdown-item" href="#">Perfil</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="#">Sair</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navbar Mobile -->
+      <nav
+        class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none"
+      >
+        <div class="container-fluid">
+          <a class="navbar-brand fw-bold fs-3" href="#">ConectaVidas+</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMobile"
+            aria-controls="navbarMobile"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarMobile">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <button class="btn d-flex align-items-center w-100 my-2" aria-label="Curtir esta campanha">
+                  <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                  Curtir <span class="badge bg-primary ms-2">125</span>
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="theme-toggle btn btn-outline-secondary w-100 my-2"
+                  title="Alternar Tema"
+                  aria-label="Alternar tema claro/escuro"
+                >
+                  <i class="bi bi-moon-fill"></i> Tema
+                </button>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle fw-bold"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  aria-label="Menu do usuário"
+                >
+                  Empresa
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                  <li><a class="dropdown-item" href="#">Novo projeto</a></li>
+                  <li><a class="dropdown-item" href="#">Configurações</a></li>
+                  <li><a class="dropdown-item" href="#">Perfil</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a class="dropdown-item" href="#">Sair</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Título da página fora do header -->
+    <section class="text-center mt-5 pt-5">
+      <h1 class="fw-bold display-5 mt-4">Doações</h1>
+      <p class="text-muted fs-5">
+        Explore campanhas solidárias e contribua para transformar vidas.
+      </p>
+    </section>
+
+    <main class="container-fluid mt-5 pt-5">
+      <div class="row g-4 px-3 px-md-5">
+        <!-- Coluna Esquerda -->
+        <div class="col-12 col-md-7">
+          <div class="card shadow-sm mb-4">
+            <img
+              src="https://picsum.photos/800/400"
+              class="card-img-top"
+              alt="Imagem da campanha"
+            />
+            <div class="card-body">
+              <!-- Cabeçalho da campanha -->
+              <div class="d-flex align-items-center mb-3">
+                <img
+                  src="https://github.com/mdo.png"
+                  class="rounded-circle me-2"
+                  width="50"
+                  height="50"
+                  alt="ONG"
+                />
+                <div>
+                  <h5 class="card-title mb-0 fw-bold">
+                    Campanha “Ajudando o Futuro”
+                  </h5>
+                  <small class="text-muted">ONG Esperança Viva</small><br />
+                  <small class="text-secondary"
+                    ><i class="bi bi-geo-alt"></i> São Paulo - SP</small
+                  >
+                </div>
+              </div>
+
+              <!-- Descrição mais completa -->
+              <p class="card-text fs-5">
+                A campanha <strong>“Ajudando o Futuro”</strong> tem como
+                objetivo arrecadar fundos para a compra e distribuição de
+                materiais escolares a crianças em situação de vulnerabilidade.
+                Acreditamos que o acesso à educação é a base para a construção
+                de um futuro melhor — e cada contribuição ajuda a transformar
+                vidas e comunidades inteiras.
+              </p>
+
+              <!-- Impacto esperado -->
+              <div class="bg-body-secondary rounded-3 p-3 mb-3">
+                <h6 class="fw-bold mb-1">
+                  <i class="bi bi-bar-chart-fill text-success"></i> Impacto
+                  Esperado
+                </h6>
+                <p class="mb-0">
+                  Espera-se atender mais de <strong>500 crianças</strong> com
+                  kits escolares completos, promovendo inclusão, dignidade e
+                  oportunidade de aprendizado.
+                </p>
+              </div>
+
+              <!-- Objetivo e meta -->
+              <div class="bg-body-tertiary rounded-3 p-3 mb-3">
+                <h6 class="fw-bold mb-1">
+                  <i class="bi bi-flag-fill text-primary"></i> Objetivo
+                </h6>
+                <p class="mb-0">
+                  Arrecadar recursos financeiros e materiais escolares até
+                  <strong>31 de dezembro de 2025</strong>.
+                </p>
+              </div>
+
+              <!-- Meta -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between fw-semibold">
+                  <span>Meta: R$ 10.000</span>
+                  <span>Arrecadado: R$ 6.500</span>
+                </div>
+                <div class="progress" style="height: 1.2rem">
+                  <div
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    style="width: 65%"
+                    aria-valuenow="65"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    65%
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ações -->
+              <div class="d-flex justify-content-around fs-4 mt-3">
+                <!-- Número de curtidas -->
+                <div class="text-center">
+                  <button class="btn d-flex flex-column align-items-center" aria-label="Curtir a campanha">
+                    <i class="bi bi-heart fs-4"></i>
+                    <span class="mt-1 fw-semibold">125</span>
+                  </button>
+                </div>
+
+                <!-- Compartilhar -->
+                <div class="text-center">
+                  <button class="btn d-flex flex-column align-items-center" aria-label="Compartilhar a campanha">
+                    <i class="bi bi-share fs-3"></i>
+                    <span class="mt-1 fw-semibold">Compartilhar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Pagamento -->
+        <div class="col-12 col-md-5">
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-body-secondary fw-bold">
+              Apoiar esta Campanha
+            </div>
+            <div class="card-body">
+              <form id="formDoacao">
+                <div class="mb-3">
+                  <label for="valorDoacao" class="form-label fw-semibold"
+                    >Valor da Doação (R$)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="valorDoacao"
+                    placeholder="Ex: 50.00"
+                    required
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-semibold"
+                    >Método de Pagamento</label
+                  >
+                  <select class="form-select" id="metodoPagamento" required aria-label="Selecione o método de pagamento">
+                    <option value="">Selecione...</option>
+                    <option value="cartao">Cartão de Crédito</option>
+                    <option value="pix">PIX</option>
+                    <option value="boleto">Boleto Bancário</option>
+                  </select>
+                </div>
+
+                <!-- Campos dinâmicos -->
+                <div id="camposPagamento"></div>
+
+                <button
+                  type="submit"
+                  class="btn btn-success w-100 fw-bold mt-3"
+                >
+                  Confirmar Doação
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Lista de Doadores -->
+          <div class="card shadow-sm">
+            <div class="card-header bg-body-secondary fw-bold">
+              Últimos Doadores
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <strong>Empresa Sol Nascente</strong> — R$ 500,00
+              </li>
+              <li class="list-group-item">
+                <strong>Maria Santos</strong> — R$ 150,00
+              </li>
+              <li class="list-group-item">
+                <strong>TechCorp</strong> — R$ 1.000,00
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer  -->
+    <footer
+      class="bg-body-tertiary text-body py-2 d-md-block"
+      data-bs-theme="dark"
+    >
+      <div class="container text-center text-md-start small">
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <h5 class="fw-bold fs-5">ConectaVidas+</h5>
+            <p>Conectando pessoas, empresas e ONGs para transformar vidas.</p>
+          </div>
+          <div class="col-md-4 mb-2">
+            <h6 class="fw-bold">Links úteis</h6>
+            <ul class="list-unstyled">
+              <li>
+                <a href="#" class="text-body-secondary text-decoration-none"
+                  >Sobre</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-body-secondary text-decoration-none"
+                  >Campanhas</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-body-secondary text-decoration-none"
+                  >Contato</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4 mb-2 text-center">
+            <h6 class="fw-bold">Siga-nos</h6>
+            <div class="d-flex justify-content-center gap-2">
+              <a href="#" class="text-body"
+                ><i class="bi bi-facebook fs-5"></i
+              ></a>
+              <a href="#" class="text-body"
+                ><i class="bi bi-instagram fs-5"></i
+              ></a>
+              <a href="#" class="text-body"
+                ><i class="bi bi-twitter-x fs-5"></i
+              ></a>
+              <a href="#" class="text-body"
+                ><i class="bi bi-whatsapp fs-5"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <hr class="my-1 border-body-secondary" />
+        <p class="text-center mb-0 text-body-secondary">
+          &copy; 2025 ConectaVidas+. Todos os direitos reservados.
+        </p>
+      </div>
+    </footer>
+
+    <script src="../../../public/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../public/js/trocar-dark-light.js"></script>
+    <script src="../../../public/js/doacao.js"></script>
+  </body>
+</html>

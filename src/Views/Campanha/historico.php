@@ -1,161 +1,202 @@
-<?php
-// PHP pode ser usado aqui para carregar dados do histórico do banco de dados
-?>
-
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-bs-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histórico de Doações - ConectaVidas+</title>
-    <link rel="stylesheet" href="../../../public/css/bootstrap.min.css" /> 
-    <link rel="stylesheet" href="../../../public/css/global.css" />
-    <link rel="stylesheet" href="../../../public/css/after-login.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histórico de Doações | ConectaVidas+</title>
+  <link rel="stylesheet" href="../../../public/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100 bg-body">
 
-<header>
-    <div class="d-none d-md-flex container-fluid justify-content-between align-items-center py-2 px-4 border-bottom bg-warning fixed-top shadow-sm">
-        <div class="logo">
-            <a href="#" class="text-decoration-none text-dark">
-                <span class="fw-bold fs-1">ConectaVidas+</span>
-            </a>
-        </div>
-        <div class="d-flex align-items-center gap-4">
-            <form class="flex-grow-1" role="search">
-                <input type="search" class="form-control fs-5" placeholder="Buscar doadores/campanhas..." aria-label="Search" />
-            </form>
-            <div class="dropdown menu-user p-2" data-bs-theme="light">
-                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="me-2 fs-5">Login ONG</span>
-                    <img src="https://via.placeholder.com/40" alt="Foto de perfil da ONG" width="40" height="40" class="rounded-circle" />
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end fs-5">
-                    <li><a class="dropdown-item" href="criar-campanha.html"><i class="bi bi-plus-square-fill me-2"></i> Criar Campanha</a></li>
-                    <li><a class="dropdown-item" href="lista-campanhas.html"><i class="bi bi-list-check me-2"></i> Lista de Campanhas</a></li>
-                    <li><a class="dropdown-item active" aria-current="page" href="#"><i class="bi bi-graph-up-arrow me-2"></i> Histórico de Doações</a></li>
-                    <li><a class="dropdown-item" href="perfil-ong.html"><i class="bi bi-person-fill me-2"></i> Perfil da ONG</a></li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i> Sair</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="d-flex d-md-none flex-column bg-body fixed-top border-bottom shadow-sm">
-        <div class="d-flex justify-content-between align-items-center px-3 pt-2 pb-1">
-            <a href="#" class="text-decoration-none logo text-body">
-                <span class="fw-bold fs-3">ConectaVidas+</span>
-            </a>
-            <button class="theme-toggle btn btn-outline-secondary fs-4" title="Alternar Tema">
-                <i class="bi bi-moon-fill"></i>
-            </button>
-            <a href="#" class="text-body"><i class="bi bi-chat fs-4"></i></a>
-        </div>
-        <div class="px-3 pb-2">
-            <form role="search">
-                <input type="search" class="form-control" placeholder="Buscar" aria-label="Search" />
-            </form>
-        </div>
-    </div>
-    
-    <nav class="navbar border-top fixed-bottom d-flex d-md-none justify-content-around py-2 shadow-sm bg-body">
-        <a href="dashboard.html" class="text-body text-center" title="Dashboard"><i class="bi bi-house-door fs-3"></i></a>
-        <a href="criar-campanha.html" class="text-body text-center" title="Criar Campanha"><i class="bi bi-plus-square fs-3"></i></a>
-        <a href="lista-campanhas.html" class="text-body text-center" title="Minhas Campanhas"><i class="bi bi-list-check fs-3"></i></a>
-        <a href="#" class="text-primary text-center" title="Doações"><i class="bi bi-graph-up-arrow fs-3"></i></a> 
-    </nav>
-</header>
-<main class="container my-4" style="padding-top: 100px">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="display-5 fw-bold mb-0">
-            <i class="bi bi-graph-up-arrow me-2 text-success"></i> Histórico de Doações
-        </h1>
-    </div>
-    
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="card p-3 shadow-sm border-0">
-                <small class="text-muted">Total Arrecadado (Mês)</small>
-                <h4 class="text-success mb-0">R$ 4.560,00</h4>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <form class="d-flex gap-2">
-                <input type="date" class="form-control" placeholder="Data Início">
-                <input type="date" class="form-control" placeholder="Data Fim">
-                <select class="form-select">
-                    <option selected disabled>Filtrar por Campanha</option>
-                    <option>Campanha A</option>
-                    <option>Campanha B</option>
-                </select>
-                <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i></button>
-            </form>
-        </div>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="table table-hover table-striped shadow-sm align-middle">
-            <thead class="bg-light">
-                <tr>
-                    <th scope="col">Data</th>
-                    <th scope="col">Valor</th>
-                    <th scope="col">Doador</th>
-                    <th scope="col">Campanha</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>25/08/2025</td>
-                    <td class="fw-bold text-success">R$ 50,00</td>
-                    <td>Maria S. (Anônimo)</td>
-                    <td>Ajuda aos Animais</td>
-                    <td><span class="badge text-bg-success">Confirmado</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info" title="Detalhes"><i class="bi bi-info-circle"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>24/08/2025</td>
-                    <td class="fw-bold text-success">R$ 200,00</td>
-                    <td>João P. Silva</td>
-                    <td>Reforma Escolar</td>
-                    <td><span class="badge text-bg-success">Confirmado</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info" title="Detalhes"><i class="bi bi-info-circle"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>23/08/2025</td>
-                    <td class="fw-bold text-warning">R$ 10,00</td>
-                    <td>Anônimo</td>
-                    <td>Meio Ambiente Limpo</td>
-                    <td><span class="badge text-bg-warning">Pendente</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info" title="Detalhes"><i class="bi bi-info-circle"></i></button>
-                    </td>
-                </tr>
-                </tbody>
-        </table>
-    </div>
-    
-    <nav class="d-flex justify-content-center mt-4">
-        <ul class="pagination">
-            <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Próxima</a></li>
+<!-- Header -->
+<header class="main-header">
+  <!-- Desktop -->
+  <div class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
+    <a href="#" class="text-decoration-none text-body">
+      <span class="fw-bold fs-1">ConectaVidas+</span>
+    </a>
+    <div class="d-flex align-items-center gap-4 ms-auto">
+      <button class="theme-toggle btn btn-outline-secondary fs-5" title="Alternar Tema">
+        <i class="bi bi-moon-fill"></i>
+      </button>
+      <div class="dropdown menu-user p-2" data-bs-theme="light">
+        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-body" data-bs-toggle="dropdown" aria-expanded="false" id="navOngName">
+          <span class="me-2 fw-bold fs-5" id="navOngNameText">Instituto Esperança</span>
+          <img src="https://picsum.photos/100" alt="avatar" width="40" height="40" class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end fs-5">
+          <li><a class="dropdown-item active" href="#">Histórico de Doações</a></li>
+          <li><a class="dropdown-item" href="criar-campanha.html">Nova Campanha</a></li>
+          <li><a class="dropdown-item" href="lista-campanhas.html">Lista de Campanhas</a></li>
+          <li><a class="dropdown-item" href="perfil-ong.html">Perfil</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="logout.php">Sair</a></li>
         </ul>
-    </nav>
-    
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile -->
+  <nav class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold fs-3" href="#">ConectaVidas+</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMobile">
+        <ul class="navbar-nav w-100">
+          <li class="nav-item my-2">
+            <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#filtroDoacoesModal">
+              Filtrar Doações
+            </button>
+          </li>
+          <li class="nav-item my-2">
+            <button class="theme-toggle btn btn-outline-secondary w-100" title="Alternar Tema">
+              Tema
+            </button>
+          </li>
+          <li class="nav-item my-2">
+            <div class="dropdown w-100">
+              <button class="btn btn-outline-secondary w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Instituto Esperança
+              </button>
+              <ul class="dropdown-menu w-100 fs-5">
+                <li><a class="dropdown-item active" href="#">Histórico de Doações</a></li>
+                <li><a class="dropdown-item" href="criar-campanha.html">Nova Campanha</a></li>
+                <li><a class="dropdown-item" href="lista-campanhas.html">Lista de Campanhas</a></li>
+                <li><a class="dropdown-item" href="perfil-ong.html">Perfil</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="logout.php">Sair</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="container mt-5 pt-5">
+  <div class="text-center mb-4">
+    <h1 class="fw-bold display-5 mt-4">Histórico de Doações</h1>
+    <p class="text-muted fs-5">Acompanhe todas as doações recebidas por suas campanhas.</p>
+  </div>
+
+  <!-- Resumo -->
+  <div class="row mb-4 g-3">
+    <div class="col-12 col-md-4">
+      <div class="card shadow-sm p-3 border-0 text-center">
+        <small class="text-muted">Total Arrecadado (Mês)</small>
+        <h4 class="text-success mb-0">R$ 4.560,00</h4>
+      </div>
+    </div>
+    <div class="col-12 col-md-8">
+      <form class="row g-2">
+        <div class="col-12 col-md">
+          <input type="date" class="form-control" placeholder="Data Início">
+        </div>
+        <div class="col-12 col-md">
+          <input type="date" class="form-control" placeholder="Data Fim">
+        </div>
+        <div class="col-12 col-md">
+          <select class="form-select">
+            <option selected disabled>Filtrar por Campanha</option>
+            <option>Campanha A</option>
+            <option>Campanha B</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-auto">
+          <button class="btn btn-primary w-100" type="submit"><i class="bi bi-funnel"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <div class="table-responsive">
+    <table class="table table-hover table-striped shadow-sm align-middle">
+      <thead class="bg-body-secondary">
+        <tr>
+          <th>Data</th>
+          <th>Valor</th>
+          <th>Doador</th>
+          <th>Campanha</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>25/08/2025</td>
+          <td class="fw-bold text-success">R$ 50,00</td>
+          <td>Maria S. (Anônimo)</td>
+          <td>Ajuda aos Animais</td>
+          <td><span class="badge text-bg-success">Confirmado</span></td>
+          <td><button class="btn btn-sm btn-outline-info"><i class="bi bi-info-circle"></i></button></td>
+        </tr>
+        <tr>
+          <td>24/08/2025</td>
+          <td class="fw-bold text-success">R$ 200,00</td>
+          <td>João P. Silva</td>
+          <td>Reforma Escolar</td>
+          <td><span class="badge text-bg-success">Confirmado</span></td>
+          <td><button class="btn btn-sm btn-outline-info"><i class="bi bi-info-circle"></i></button></td>
+        </tr>
+        <tr>
+          <td>23/08/2025</td>
+          <td class="fw-bold text-warning">R$ 10,00</td>
+          <td>Anônimo</td>
+          <td>Meio Ambiente Limpo</td>
+          <td><span class="badge text-bg-warning">Pendente</span></td>
+          <td><button class="btn btn-sm btn-outline-info"><i class="bi bi-info-circle"></i></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginação -->
+  <nav class="d-flex justify-content-center mt-4">
+    <ul class="pagination">
+      <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+      <li class="page-item active"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item"><a class="page-link" href="#">Próxima</a></li>
+    </ul>
+  </nav>
 </main>
-<footer class="text-center py-3 mt-4 bg-light">
-    </footer>
+
+<!-- Footer -->
+<footer class="bg-body-tertiary text-body py-2 mt-auto" data-bs-theme="dark">
+  <div class="container text-center text-md-start small">
+    <div class="row">
+      <div class="col-md-4 mb-2">
+        <h5 class="fw-bold fs-5">ConectaVidas+</h5>
+        <p>Conectando pessoas, empresas e ONGs para transformar vidas.</p>
+      </div>
+      <div class="col-md-4 mb-2">
+        <h6 class="fw-bold">Links úteis</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-body-secondary text-decoration-none">Sobre</a></li>
+          <li><a href="#" class="text-body-secondary text-decoration-none">Campanhas</a></li>
+          <li><a href="#" class="text-body-secondary text-decoration-none">Contato</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-2 text-center">
+        <h6 class="fw-bold">Siga-nos</h6>
+        <div class="d-flex justify-content-center gap-2">
+          <a href="#" class="text-body"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="#" class="text-body"><i class="bi bi-instagram fs-5"></i></a>
+          <a href="#" class="text-body"><i class="bi bi-twitter-x fs-5"></i></a>
+          <a href="#" class="text-body"><i class="bi bi-whatsapp fs-5"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr class="my-1 border-body-secondary">
+    <p class="text-center mb-0 text-body-secondary">&copy; 2025 ConectaVidas+. Todos os direitos reservados.</p>
+  </div>
+</footer>
 
 <script src="../../../public/js/bootstrap.bundle.min.js"></script>
 <script src="../../../public/js/trocar-dark-light.js"></script>

@@ -1,0 +1,13 @@
+.perfil-foto {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.card {
+  border-radius: 1rem;
+}
+.impacto-card {
+  background: linear-gradient(135deg, #198754, #20c997);
+  color: #fff;
+}

@@ -1,0 +1,13 @@
+.perfil-foto {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.card {
+  border-radius: 1rem;
+}
+.saldo-card {
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  color: #fff;
+}

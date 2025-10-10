@@ -1,0 +1,156 @@
+
+    /* --------- VARIÁVEIS (troque aqui quando tiver os hex reais) --------- */
+    :root{
+  --bg: #ffffff;          /* fundo da página */
+  --surface: #FFFFFF;     /* fundo de cards/seções */
+  --muted: #555555;       /* texto secundário */
+  --text: #333333;        /* texto principal */
+  --primary: #117A37;     /* verde principal */
+  --primary-600: #0E6A30; /* verde mais escuro */
+  --accent: #F5821F;      /* laranja do topo e logo */
+  --highlight: #F2C300;   /* amarelo de destaque */
+  --card-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  --radius: 12px;
+  --container: 1100px;
+  --gap: 1rem;
+}
+
+    /* ---------- Reset e base ---------- */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding-bottom:4rem;
+    }
+    img{max-width:100%;display:block;border-radius:8px}
+
+    .container{
+      width:calc(100% - 2rem);
+      max-width:var(--container);
+      margin:0 auto;
+    }
+
+    /* ---------- Header ---------- */
+    header{
+  background: var(--accent);
+  position:sticky;
+  top:0;
+  z-index:40;
+  backdrop-filter: blur(6px);
+  padding:0.8rem 0;
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:var(--gap);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:0.75rem;
+      text-decoration:none;
+      color:white;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:10px;
+      display:grid;place-items:center;
+      font-weight:700;color:white;
+      background:linear-gradient(135deg,var(--primary),var(--primary-600));
+      box-shadow: 0 4px 12px rgba(17,24,39,0.12);
+    }
+    nav ul{display:flex;gap:1rem;list-style:none;padding:0;margin:0;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;padding:0.25rem 0.5rem;border-radius:8px;font-weight:600}
+    nav a:hover{color:var(--text);background:rgba(0,0,0,0.03)}
+
+    .actions{display:flex;gap:0.5rem;align-items:center}
+    .btn{
+      background:var(--primary);
+      color:white;padding:0.55rem 0.9rem;border-radius:10px;border:0;font-weight:700;cursor:pointer;
+      box-shadow: 0 6px 18px rgba(16,24,40,0.08);
+    }
+    .btn.secondary{
+      background:transparent;color:black;border:1px solid black;
+      font-weight:700;
+    }
+
+    /* mobile menu button */
+    .menu-btn{display:none;background:none;border:0;font-size:1.2rem;cursor:pointer;color:var(--muted)}
+
+    /* ---------- Hero ---------- */
+    .hero{
+      padding:2.25rem 0;
+      display:flex;
+      gap:2rem;
+      align-items:center;
+    }
+    .hero-left{flex:1}
+    .kicker{
+      display:inline-block;font-weight:700;color:var(--primary);background:rgba(30,155,126,0.08);padding:6px 10px;border-radius:999px;margin-bottom:0.75rem;
+    }
+    h1{
+      font-size:clamp(1.6rem, 3.8vw, 2.6rem);
+      margin:0 0 0.6rem 0;
+      line-height:1.06;
+    }
+    p.lead{color:var(--muted);margin:0 0 1rem 0;max-width:60ch}
+
+    .hero-cta{display:flex;gap:0.75rem;margin-top:1rem}
+    .search-card{
+      margin-top:1.25rem;background:var(--surface);box-shadow:var(--card-shadow);padding:0.9rem;border-radius:12px;display:flex;gap:0.5rem;align-items:center;
+    }
+    .search-card input{flex:1;border:0;outline:0;padding:0.6rem;font-size:0.95rem}
+    .search-card button{background:var(--accent);border:0;padding:0.55rem 0.9rem;border-radius:10px;color:white;font-weight:700;cursor:pointer}
+
+    .hero-right{width:420px;max-width:40%;display:flex;justify-content:center}
+    .mock-card{background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,250,0.7));border-radius:16px;padding:1rem;width:100%;box-shadow:var(--card-shadow);}
+
+    /* ---------- Grid de ONGs ---------- */
+    section.ngos{padding:1.75rem 0}
+    .ngos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .card{
+      background:var(--surface);padding:0.9rem;border-radius:12px;box-shadow:var(--card-shadow);
+      display:flex;gap:0.65rem;align-items:flex-start;
+    }
+    .thumb{width:92px;height:72px;border-radius:8px;flex-shrink:0;object-fit:cover}
+    .card h3{margin:0;font-size:1rem}
+    .card p{margin:0.35rem 0 0 0;color:var(--muted);font-size:0.92rem}
+    .card .meta{margin-top:0.5rem;display:flex;gap:0.5rem;align-items:center}
+
+    .donate{
+      margin-left:auto;
+      background:linear-gradient(90deg,var(--accent),#ef7b00);
+      color:white;padding:0.5rem 0.7rem;border-radius:10px;border:0;font-weight:700;cursor:pointer;
+      font-size:0.9rem;
+    }
+
+    /* ---------- How it works ---------- */
+    .how{padding:2rem 0;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:center}
+    .steps{display:flex;flex-direction:column;gap:0.8rem}
+    .step{background:var(--surface);padding:0.9rem;border-radius:12px;box-shadow:var(--card-shadow);display:flex;gap:0.85rem;align-items:flex-start}
+    .icon{width:48px;height:48px;border-radius:10px;display:grid;place-items:center;font-weight:700;color:white;background:var(--primary)}
+
+    /* ---------- Footer ---------- */
+    footer{padding:2rem 0;color:var(--muted)}
+    .foot-grid{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:center}
+    .small{font-size:0.9rem;color:var(--muted)}
+
+    /* ---------- Responsividade ---------- */
+    @media (max-width:900px){
+      .ngos-grid{grid-template-columns:repeat(2,1fr)}
+      .hero-right{display:none}
+      nav ul{display:none}
+      .menu-btn{display:block}
+    }
+    @media (max-width:560px){
+      .container{width:calc(100% - 1.2rem)}
+      .ngos-grid{grid-template-columns:1fr}
+      .how{grid-template-columns:1fr}
+    }
+  

@@ -1,7 +1,3 @@
-<script src="/js/bootstrap.bundle.min.js"></script>
-<script src="/js/trocar-dark-light.js"></script>
-<script src="/js/perfil-empresa.js"></script>
-
 <!-- Footer  -->
 <footer
     class="bg-body-tertiary text-body py-2 d-md-block"
@@ -36,3 +32,9 @@
         </p>
     </div>
 </footer>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/trocar-dark-light.js"></script>
+<script src="/js/perfil-empresa.js"></script>
+</body>
+
+</html>

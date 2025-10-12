@@ -11,6 +11,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Controllers\HomeController;
 use Controllers\LoginController;
 use Controllers\RegisterController;
+use Controllers\EmpresaController;
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -25,11 +26,13 @@ $routes = [
     'login/authenticate' => [LoginController::class, 'authenticate'],
     'logout' => [LoginController::class, 'logout'],
     'empresa' => [HomeController::class, 'empresa'],
+    'empresa' => [EmpresaController::class, 'dashboard'],
+    'empresa/create' => [EmpresaController::class, 'showCreateForm'],
+    'empresa/store' => [EmpresaController::class, 'store'],
     'ong' => [HomeController::class, 'ong'],
     'admin' => [HomeController::class, 'admin'],
     'logged' => [HomeController::class, 'logged'],
     'register' => [RegisterController::class, 'showRegisterForm'],
-    'register/create' => [RegisterController::class, 'create'],
 ];
 
 if (!array_key_exists($url, $routes)) {

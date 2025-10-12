@@ -1,10 +1,49 @@
-<?php include __DIR__ . '/../../Components/header-empresa.php'; ?>
+<?php
 
-<!-- Header Responsivo -->
+declare(strict_types=1);
+
+include __DIR__ . '/../../Components/header-empresa.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+function formatCnpj(?string $cnpjRaw): ?string
+{
+    if ($cnpjRaw === null) return null;
+    $cnpj = preg_replace('/\D/', '', (string)$cnpjRaw);
+    if (strlen($cnpj) !== 14) {
+        return $cnpjRaw;
+    }
+    return substr($cnpj, 0, 2) . '.' .
+        substr($cnpj, 2, 3) . '.' .
+        substr($cnpj, 5, 3) . '/' .
+        substr($cnpj, 8, 4) . '-' .
+        substr($cnpj, 12, 2);
+}
+
+$organizacao = $organizacao ?? null;
+$empresa = $empresa ?? null;
+$sessionUser = $_SESSION['user'] ?? [];
+
+$nomeFantasia = (string)($empresa['nome_fantasia'] ?? ($organizacao['razao_social'] ?? '—'));
+$razao = (string)($organizacao['razao_social'] ?? $empresa['nome_fantasia'] ?? '—');
+$cnpjRaw = $organizacao['cnpj'] ?? '';
+$cnpjFormatado = formatCnpj($cnpjRaw) ?? $cnpjRaw;
+$email = $sessionUser['email'] ?? ($organizacao['email'] ?? '');
+$telefone = $sessionUser['telefone'] ?? ($organizacao['telefone'] ?? '');
+$endereco = $sessionUser['endereco'] ?? ($organizacao['endereco'] ?? '');
+$descricao = $organizacao['descricao'] ?? ($empresa['descricao'] ?? '');
+$profileHandle = preg_replace('/\W+/', '', strtolower($nomeFantasia)) ?: 'empresa';
+
+// Dados de conta (mock por enquanto)
+$accountNumber = $empresa['account_number'] ?? '0012345-9';
+$accountBalance = $empresa['account_balance'] ?? 'R$ 12.540,00';
+$accountLimit = $empresa['account_limit'] ?? 'R$ 5.000,00';
+?>
+
 <header class="main-header">
-    <!-- Navbar Desktop -->
-    <div
-        class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
+    <div class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
         <div class="d-flex align-items-center me-4">
             <a href="#" class="text-decoration-none text-body">
                 <span class="fw-bold fs-1">ConectaVidas+</span>
@@ -27,9 +66,9 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                     id="navCompanyName">
-                    <span class="me-2 fw-bold fs-5" id="navCompanyNameText">TechSolidariedade</span>
+                    <span class="me-2 fw-bold fs-5" id="navCompanyNameText"><?= htmlspecialchars($nomeFantasia) ?></span>
                     <img
-                        src="https://picsum.photos/100"
+                        src="<?= htmlspecialchars($empresa['logo'] ?? 'https://picsum.photos/100') ?>"
                         alt="avatar"
                         width="40"
                         height="40"
@@ -49,10 +88,9 @@
     </div>
 
     <!-- Navbar Mobile -->
-    <nav
-        class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none">
+    <nav class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold fs-3" href="#">ConectaVidas+</a>
+            <a class="navbar-brand fw-bold fs-3" href="#"><?= htmlspecialchars($nomeFantasia ?: 'ConectaVidas+') ?></a>
             <button
                 class="navbar-toggler"
                 type="button"
@@ -78,13 +116,14 @@
                             <i class="bi bi-moon-fill"></i> Tema
                         </button>
                     </li>
+                    <li class="nav-item mt-2">
+                        <a class="btn btn-outline-danger w-100" href="/?url=logout">Sair</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-
-<!-- Título da página fora do header -->
 <section class="text-center mt-5 pt-5">
     <h1 class="fw-bold display-5 mt-4">Perfil da Empresa</h1>
     <p class="text-muted fs-5">Gerencie seus dados, conta e visualize seu histórico de doações.</p>
@@ -98,19 +137,18 @@
                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
                     <div class="d-flex align-items-center">
                         <img
-                            src="https://picsum.photos/200"
+                            src="<?= htmlspecialchars($empresa['logo'] ?? 'https://picsum.photos/200') ?>"
                             alt="Logo Empresa"
                             class="perfil-foto border border-3 border-primary mb-3 mb-md-0 me-3"
                             id="profilePhoto" />
                         <div class="text-start">
-                            <h3 class="fw-bold mb-0" id="profileName">TechSolidariedade LTDA</h3>
-                            <p class="text-muted mb-1" id="profileHandle">@techsolidariedade</p>
-                            <p class="text-secondary mb-0" id="profileDesc">Empresa parceira no impacto social através da inovação e tecnologia 💡🤝</p>
+                            <h3 class="fw-bold mb-0" id="profileName"><?= htmlspecialchars($razao) ?></h3>
+                            <p class="text-muted mb-1" id="profileHandle">@<?= htmlspecialchars($profileHandle) ?></p>
+                            <p class="text-secondary mb-0" id="profileDesc"><?= htmlspecialchars($descricao ?: '—') ?></p>
                         </div>
                     </div>
 
                     <div class="mt-3 mt-md-0">
-                        <!-- Edit profile button -->
                         <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
                             <i class="bi bi-pencil"></i> Editar Perfil
                         </button>
@@ -134,24 +172,24 @@
                 <div class="card-body row g-3">
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">CNPJ</label>
-                        <input type="text" class="form-control" id="inputCNPJ" value="12.345.678/0001-90" readonly />
+                        <input type="text" class="form-control" id="inputCNPJ" value="<?= htmlspecialchars($cnpjFormatado) ?>" readonly />
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Nome Fantasia</label>
-                        <input type="text" class="form-control" id="inputNomeFantasia" value="TechSolidariedade" readonly />
+                        <input type="text" class="form-control" id="inputNomeFantasia" value="<?= htmlspecialchars($nomeFantasia) ?>" readonly />
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Razão Social</label>
-                        <input type="text" class="form-control" id="inputRazao" value="TechSolidariedade LTDA" readonly />
+                        <input type="text" class="form-control" id="inputRazao" value="<?= htmlspecialchars($razao) ?>" readonly />
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">E-mail</label>
-                        <input type="email" class="form-control" id="inputEmail" value="contato@techsolidariedade.com" readonly />
+                        <input type="email" class="form-control" id="inputEmail" value="<?= htmlspecialchars($email) ?>" readonly />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Telefone</label>
-                        <input type="text" class="form-control" id="inputTelefone" value="(13) 3322-4455" readonly />
+                        <input type="text" class="form-control" id="inputTelefone" value="<?= htmlspecialchars($telefone) ?>" readonly />
                     </div>
 
                     <div class="col-12">
@@ -160,7 +198,7 @@
                             type="text"
                             class="form-control"
                             id="inputEndereco"
-                            value="Av. das Empresas, 500 - Guarujá/SP"
+                            value="<?= htmlspecialchars($endereco) ?>"
                             readonly />
                     </div>
                 </div>
@@ -170,11 +208,11 @@
                 <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
                     <div>
                         <h5 class="fw-bold mb-1">Conta Empresarial</h5>
-                        <p class="mb-0">Número da conta: <strong id="accountNumber">0012345-9</strong></p>
+                        <p class="mb-0">Número da conta: <strong id="accountNumber"><?= htmlspecialchars($accountNumber) ?></strong></p>
                     </div>
                     <div class="text-end mt-3 mt-md-0">
-                        <h3 class="fw-bold mb-0" id="accountBalance">R$ 12.540,00</h3>
-                        <small id="accountLimit">Limite de crédito: R$ 5.000,00</small>
+                        <h3 class="fw-bold mb-0" id="accountBalance"><?= htmlspecialchars($accountBalance) ?></h3>
+                        <small id="accountLimit">Limite de crédito: <?= htmlspecialchars($accountLimit) ?></small>
                     </div>
                 </div>
             </section>
@@ -231,10 +269,9 @@
     </div>
 </main>
 
-<!-- Modal Editar Perfil -->
 <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form class="modal-content" id="editarPerfilForm">
+        <form class="modal-content" id="editarPerfilForm" method="POST" action="/?url=empresa/update">
             <div class="modal-header">
                 <h5 class="modal-title" id="editarPerfilLabel">Editar Perfil da Empresa</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
@@ -243,41 +280,41 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Nome Fantasia</label>
-                        <input type="text" name="nomeFantasia" id="formNomeFantasia" class="form-control" required />
+                        <input type="text" name="nome_fantasia" id="formNomeFantasia" class="form-control" required value="<?= htmlspecialchars($nomeFantasia) ?>" />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Razão Social</label>
-                        <input type="text" name="razao" id="formRazao" class="form-control" />
+                        <input type="text" name="razao_social" id="formRazao" class="form-control" value="<?= htmlspecialchars($razao) ?>" />
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">CNPJ</label>
-                        <input type="text" name="cnpj" id="formCNPJ" class="form-control" />
+                        <input type="text" name="cnpj" id="formCNPJ" class="form-control" value="<?= htmlspecialchars($cnpjFormatado) ?>" />
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">E-mail</label>
-                        <input type="email" name="email" id="formEmail" class="form-control" required />
+                        <input type="email" name="email" id="formEmail" class="form-control" required value="<?= htmlspecialchars($email) ?>" />
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Telefone</label>
-                        <input type="text" name="telefone" id="formTelefone" class="form-control" />
+                        <input type="text" name="telefone" id="formTelefone" class="form-control" value="<?= htmlspecialchars($telefone) ?>" />
                     </div>
 
                     <div class="col-12">
                         <label class="form-label">Endereço</label>
-                        <input type="text" name="endereco" id="formEndereco" class="form-control" />
+                        <input type="text" name="endereco" id="formEndereco" class="form-control" value="<?= htmlspecialchars($endereco) ?>" />
                     </div>
 
                     <div class="col-12">
                         <label class="form-label">Descrição (breve)</label>
-                        <textarea name="descricao" id="formDescricao" class="form-control" rows="2"></textarea>
+                        <textarea name="descricao" id="formDescricao" class="form-control" rows="2"><?= htmlspecialchars($descricao) ?></textarea>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Alterar logo (URL)</label>
-                        <input type="url" name="logo" id="formLogo" class="form-control" placeholder="https://..." />
+                        <input type="url" name="logo" id="formLogo" class="form-control" placeholder="https://..." value="<?= htmlspecialchars($empresa['logo'] ?? '') ?>" />
                     </div>
 
                     <div class="col-md-6">
@@ -287,10 +324,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a href="/?url=empresa" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</a>
                 <button type="submit" class="btn btn-primary">Salvar alterações</button>
             </div>
         </form>
     </div>
 </div>
+
 <?php include __DIR__ . '/../../Components/footer-empresa.php'; ?>

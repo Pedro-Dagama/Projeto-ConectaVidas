@@ -12,6 +12,7 @@ use Controllers\HomeController;
 use Controllers\LoginController;
 use Controllers\RegisterController;
 use Controllers\EmpresaController;
+use Controllers\OngController;
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -30,6 +31,9 @@ $routes = [
     'empresa/create' => [EmpresaController::class, 'showCreateForm'],
     'empresa/store' => [EmpresaController::class, 'store'],
     'ong' => [HomeController::class, 'ong'],
+    'ong' => [OngController::class, 'dashboard'],
+    'ong/create' => [OngController::class, 'showCreateForm'],
+    'ong/store' => [OngController::class, 'store'],
     'admin' => [HomeController::class, 'admin'],
     'logged' => [HomeController::class, 'logged'],
     'register' => [RegisterController::class, 'showRegisterForm'],

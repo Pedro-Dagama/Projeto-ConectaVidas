@@ -4,15 +4,18 @@ namespace Controllers;
 
 use Config\Database;
 use Repositories\UsuarioRepository;
+use Repositories\EmpresaRepository;
 use Models\Enums\TipoUsuario;
 
 class LoginController
 {
     private UsuarioRepository $usuarioRepository;
+    private EmpresaRepository $empresaRepository;
 
     public function __construct()
     {
         $this->usuarioRepository = new UsuarioRepository(Database::getConnection());
+        $this->empresaRepository = new EmpresaRepository(Database::getConnection());
     }
 
     public function showLoginForm(?string $error = null): void
@@ -27,7 +30,7 @@ class LoginController
             return;
         }
 
-        $email = trim($_POST['email'] ?? '');
+        $email = trim((string)($_POST['email'] ?? ''));
         $password = $_POST['password'] ?? ($_POST['senha'] ?? '');
 
         if ($email === '' || $password === '') {
@@ -46,13 +49,22 @@ class LoginController
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
+            session_regenerate_id(true);
+
+            $organizacao = null;
+            try {
+                $organizacao = $this->empresaRepository->getOrganizacaoByUsuario($user->getIdUsuario());
+            } catch (\Throwable $e) {
+                $organizacao = null;
+            }
 
             $_SESSION['user'] = [
                 'id_usuario' => $user->getIdUsuario(),
                 'nome' => $user->getNome(),
                 'email' => $user->getEmail(),
                 'tipo_usuario' => $user->getTipoUsuario()->value,
-                'data_cadastro' => $user->getDataCadastro()
+                'data_cadastro' => $user->getDataCadastro(),
+                'id_organizacao' => isset($organizacao['id_organizacao']) ? (int)$organizacao['id_organizacao'] : null
             ];
 
             $tipo = $user->getTipoUsuario();

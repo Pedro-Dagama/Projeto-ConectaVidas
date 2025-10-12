@@ -18,6 +18,7 @@
       <div class="actions">
         <button class="menu-btn" id="menuBtn" aria-label="menu">☰</button>
         <a class="btn secondary" href="/?url=login">Entrar</a>
+        <a class="btn" href="/?url=empresa/create">Criar Empresa</a>
         <button class="btn" onclick="location.href='#cadastro'">Quero doar</button>
       </div>
     </div>

@@ -32,4 +32,70 @@
         },
         options: { responsive: true, plugins: { legend: { position: "bottom" } } },
       });
- 
+
+
+
+      //filtro tabela Lista de doadores
+      const corpoTabela = document.getElementById("corpoTabela");
+        const filtroNome = document.getElementById("filtroNome");
+        const filtroMetodo = document.getElementById("filtroMetodo");
+        const paginacaoDoadores = document.getElementById("paginacaoDoadores");
+        const linhasOriginais = Array.from(corpoTabela.querySelectorAll("tr"));
+        const itensPorPagina = 3;
+        let paginaAtual = 1;
+
+        function atualizarTabela() {
+          // Filtrar
+          let filtroNomeValor = filtroNome.value.toLowerCase();
+          let filtroMetodoValor = filtroMetodo.value;
+          let linhasFiltradas = linhasOriginais.filter((tr) => {
+            const nome = tr.children[0].textContent.toLowerCase();
+            const metodo = tr.children[3].textContent;
+            return (
+              nome.includes(filtroNomeValor) &&
+              (filtroMetodoValor === "" || metodo === filtroMetodoValor)
+            );
+          });
+
+          // Paginação
+          const totalPaginas = Math.ceil(
+            linhasFiltradas.length / itensPorPagina
+          );
+          if (paginaAtual > totalPaginas) paginaAtual = 1;
+          const inicio = (paginaAtual - 1) * itensPorPagina;
+          const fim = inicio + itensPorPagina;
+          const linhasPagina = linhasFiltradas.slice(inicio, fim);
+
+          // Atualizar tabela
+          corpoTabela.innerHTML = "";
+          linhasPagina.forEach((tr) => corpoTabela.appendChild(tr));
+
+          // Atualizar paginação
+          paginacaoDoadores.innerHTML = "";
+          for (let i = 1; i <= totalPaginas; i++) {
+            const li = document.createElement("li");
+            li.className = "page-item" + (i === paginaAtual ? " active" : "");
+            const a = document.createElement("a");
+            a.className = "page-link";
+            a.href = "#";
+            a.textContent = i;
+            a.addEventListener("click", (e) => {
+              e.preventDefault();
+              paginaAtual = i;
+              atualizarTabela();
+            });
+            li.appendChild(a);
+            paginacaoDoadores.appendChild(li);
+          }
+        }
+
+        filtroNome.addEventListener("input", () => {
+          paginaAtual = 1;
+          atualizarTabela();
+        });
+        filtroMetodo.addEventListener("change", () => {
+          paginaAtual = 1;
+          atualizarTabela();
+        });
+
+        atualizarTabela();

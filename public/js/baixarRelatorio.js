@@ -169,7 +169,7 @@ document.getElementById('btnBaixarPDF').addEventListener('click', () => {
         
         y += linhaAltura + 5; 
 
-        // --- 4. Tabela de Top Doadores ---
+        // --- 4. Tabela de Top() Doadores ---
         checkPageBreak(100);
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");

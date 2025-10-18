@@ -3,45 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Relatório - ConectaVidas+</title>
-
-    <!-- Bootstrap e Ícones -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Relatórios - ConectaVidas+</title>
+  <link rel="stylesheet" href="../../../public/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
   </head>
-
-  <body class="bg-body text-body">
+  <body class="d-flex flex-column min-vh-100 bg-body">
     <!-- Header -->
     <header class="main-header">
       <!-- Desktop -->
       <div
-        class="d-none d-md-flex container-fluid align-items-center justify-content-between py-2 px-4 border-bottom bg-body fixed-top shadow-sm"
+        class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm"
       >
-        <!-- Logo -->
-        <div>
+        <div class="d-flex align-items-center me-4">
           <a href="#" class="text-decoration-none text-body">
             <span class="fw-bold fs-1">ConectaVidas+</span>
           </a>
         </div>
-
-        <!-- Direita -->
-        <div class="d-flex align-items-center gap-4">
+        <div class="d-flex align-items-center gap-4 ms-auto">
           <button
             class="theme-toggle btn btn-outline-secondary fs-5"
             title="Alternar Tema"
           >
             <i class="bi bi-moon-fill"></i>
           </button>
-
-          <div class="dropdown menu-user p-2" data-bs-theme="light">
+          <div class="dropdown menu-user p-2">
             <a
               href="#"
               class="d-flex align-items-center text-decoration-none dropdown-toggle text-body"
@@ -58,12 +43,12 @@
               />
             </a>
             <ul class="dropdown-menu dropdown-menu-end fs-5">
-              <li><a class="dropdown-item" href="#">Nova campanha</a></li>
+              <li><a class="dropdown-item" href="../">Nova campanha</a></li>
               <li><a class="dropdown-item" href="#">Configurações</a></li>
               <li><a class="dropdown-item" href="#">Perfil</a></li>
               <li><a class="dropdown-item" href="#">Relatórios</a></li>
               <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item text-danger" href="#">Sair</a></li>
+              <li><a class="dropdown-item" href="#">Sair</a></li>
             </ul>
           </div>
         </div>
@@ -80,12 +65,23 @@
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarMobile"
+            aria-controls="navbarMobile"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-
           <div class="collapse navbar-collapse" id="navbarMobile">
-            <ul class="navbar-nav ms-auto fs-5">
+            <ul class="navbar-nav ms-auto">
+              <!-- Botão de Tema no Mobile -->
+              <li class="nav-item mt-2">
+                <button
+                  class="theme-toggle btn btn-outline-secondary w-100"
+                  title="Alternar Tema"
+                >
+                  <i class="bi bi-moon-fill"></i> Modo
+                </button>
+              </li>
               <li><a class="nav-link" href="#">Nova campanha</a></li>
               <li><a class="nav-link" href="#">Configurações</a></li>
               <li><a class="nav-link" href="#">Perfil</a></li>
@@ -98,96 +94,49 @@
     </header>
 
     <!-- Conteúdo -->
-    <main class="container my-5 pt-5">
-      <h1 class="fw-bold mt-5 mb-4 text-center">Relatório da Campanha</h1>
+    <main class="container my-5 pt-5 flex-fill">
+      <h1 class="fw-bold mb-4 mt-5 text-center">Relatório de Desempenho</h1>
 
-      <!-- Informações Gerais -->
-      <div class="card shadow-sm mb-4 bg-body">
-        <div class="card-body">
-          <div class="mb-4">
-            <h4 class="fw-bold text-primary mb-3">
-              Campanha: Alimente uma Família
-            </h4>
-            <button id="btnBaixarPDF" class="btn btn-primary">
-              <i class="bi bi-file-earmark-pdf-fill"></i> Baixar Relatório PDF
-            </button>
-          </div>
-          <p><strong>Período:</strong> 01/05/2025 - 30/06/2025</p>
-          <p>
-            <strong>Objetivo:</strong> Arrecadar fundos para cestas básicas.
-          </p>
-          <p class="mb-0">
-            <strong>Descrição:</strong> A campanha visa ajudar famílias em
-            situação de vulnerabilidade através de doações de alimentos.
-          </p>
-        </div>
-      </div>
-
-      <!-- Gráficos -->
-      <div class="row g-4 mb-4">
-        <div class="col-md-6">
-          <div class="card shadow-sm bg-body">
-            <div class="card-header bg-primary text-white fw-bold">
-              Arrecadação
-            </div>
-            <div class="card-body">
-              <canvas id="graficoArrecadacao"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="card shadow-sm bg-body">
-            <div class="card-header bg-primary text-white fw-bold">
-              Distribuição de Recursos
-            </div>
-            <div class="card-body">
-              <canvas id="graficoDistribuicao"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Estatísticas -->
+      <!-- Cards de métricas -->
       <div class="row g-4 mb-5">
         <div class="col-md-3 col-6">
-          <div class="card text-center shadow-sm bg-body">
+          <div class="card text-center shadow-sm">
             <div class="card-body">
-              <h6 class="text-muted">Meta</h6>
-              <h3 class="fw-bold text-primary">R$ 5.000</h3>
+              <h5 class="card-title text-muted">Campanhas Ativas</h5>
+              <h2 class="fw-bold text-primary">12</h2>
             </div>
           </div>
         </div>
         <div class="col-md-3 col-6">
-          <div class="card text-center shadow-sm bg-body">
+          <div class="card text-center shadow-sm">
             <div class="card-body">
-              <h6 class="text-muted">Arrecadado</h6>
-              <h3 class="fw-bold text-success">R$ 4.750</h3>
+              <h5 class="card-title text-muted">Total de Doações</h5>
+              <h2 class="fw-bold text-success">R$ 18.450</h2>
             </div>
           </div>
         </div>
         <div class="col-md-3 col-6">
-          <div class="card text-center shadow-sm bg-body">
+          <div class="card text-center shadow-sm">
             <div class="card-body">
-              <h6 class="text-muted">Curtidas</h6>
-              <h3 class="fw-bold text-danger">312</h3>
+              <h5 class="card-title text-muted">Pessoas Impactadas</h5>
+              <h2 class="fw-bold text-warning">2.340</h2>
             </div>
           </div>
         </div>
         <div class="col-md-3 col-6">
-          <div class="card text-center shadow-sm bg-body">
+          <div class="card text-center shadow-sm">
             <div class="card-body">
-              <h6 class="text-muted">Pessoas Impactadas</h6>
-              <h3 class="fw-bold text-warning">580</h3>
+              <h5 class="card-title text-muted">Curtidas Totais</h5>
+              <h2 class="fw-bold text-danger">4.567</h2>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Tabela de Doadores  -->
-      <div class="card shadow-sm mb-5 bg-body">
+      <!-- Filtros e Tabela detalhada -->
+      <div class="card shadow-sm">
         <div class="card-header bg-primary text-white fw-bold fs-5">
-          Lista de Doadores
+          Campanhas Realizadas
         </div>
         <div class="card-body">
           <!-- Filtros -->
@@ -195,17 +144,17 @@
             <div class="col-md-6 mb-2">
               <input
                 type="text"
-                id="filtroNome"
+                id="filtroTitulo"
                 class="form-control"
-                placeholder="Filtrar por nome do doador"
+                placeholder="Filtrar por título"
               />
             </div>
             <div class="col-md-6 mb-2">
-              <select id="filtroMetodo" class="form-select">
-                <option value="">Todos métodos</option>
-                <option value="Pix">Pix</option>
-                <option value="Cartão">Cartão</option>
-                <option value="Boleto">Boleto</option>
+              <select id="filtroStatus" class="form-select">
+                <option value="">Todos os status</option>
+                <option value="Concluída">Concluída</option>
+                <option value="Em andamento">Em andamento</option>
+                <option value="Pausada">Pausada</option>
               </select>
             </div>
           </div>
@@ -214,52 +163,56 @@
           <div class="table-responsive">
             <table
               class="table table-striped align-middle mb-0"
-              id="tabelaDoadores"
+              id="tabelaCampanhas"
             >
               <thead>
                 <tr>
-                  <th>Nome</th>
-                  <th>Valor Doado</th>
-                  <th>Data</th>
-                  <th>Método</th>
+                  <th>Título</th>
+                  <th>Meta</th>
+                  <th>Arrecadado</th>
+                  <th>Curtidas</th>
+                  <th>Status</th>
+                  <th>Relatório</th>
                 </tr>
               </thead>
-              <tbody id="corpoTabela">
+              <tbody id="corpoTabelaCampanhas">
                 <tr>
-                  <td>João Almeida</td>
-                  <td>R$ 200,00</td>
-                  <td>05/05/2025</td>
-                  <td>Pix</td>
+                  <td>Alimente uma Família</td>
+                  <td>R$ 5.000</td>
+                  <td>R$ 4.750</td>
+                  <td>312</td>
+                  <td><span class="badge bg-success">Concluída</span></td>
+                  <td>
+                    <button class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-file-earmark-text"></i> Ver
+                    </button>
+                  </td>
                 </tr>
                 <tr>
-                  <td>Maria Souza</td>
-                  <td>R$ 150,00</td>
-                  <td>07/05/2025</td>
-                  <td>Cartão</td>
+                  <td>Educação para Todos</td>
+                  <td>R$ 8.000</td>
+                  <td>R$ 3.950</td>
+                  <td>205</td>
+                  <td>
+                    <span class="badge bg-warning text-dark">Em andamento</span>
+                  </td>
+                  <td>
+                    <button class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-file-earmark-text"></i> Ver
+                    </button>
+                  </td>
                 </tr>
                 <tr>
-                  <td>Lucas Lima</td>
-                  <td>R$ 50,00</td>
-                  <td>10/05/2025</td>
-                  <td>Boleto</td>
-                </tr>
-                <tr>
-                  <td>Ana Oliveira</td>
-                  <td>R$ 300,00</td>
-                  <td>12/05/2025</td>
-                  <td>Pix</td>
-                </tr>
-                <tr>
-                  <td>Carla Mendes</td>
-                  <td>R$ 250,00</td>
-                  <td>15/05/2025</td>
-                  <td>Cartão</td>
-                </tr>
-                <tr>
-                  <td>Pedro Santos</td>
-                  <td>R$ 100,00</td>
-                  <td>18/05/2025</td>
-                  <td>Boleto</td>
+                  <td>Água Limpa Já</td>
+                  <td>R$ 10.000</td>
+                  <td>R$ 2.300</td>
+                  <td>98</td>
+                  <td><span class="badge bg-secondary">Pausada</span></td>
+                  <td>
+                    <button class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-file-earmark-text"></i> Ver
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -269,17 +222,16 @@
           <nav class="mt-3">
             <ul
               class="pagination justify-content-end"
-              id="paginacaoDoadores"
+              id="paginacaoCampanhas"
             ></ul>
           </nav>
         </div>
       </div>
-
     </main>
 
     <!-- Footer -->
     <footer
-      class="bg-body-tertiary text-body py-2 d-md-block mt-auto"
+      class="bg-body-tertiary text-body py-2 mt-auto"
       data-bs-theme="dark"
     >
       <div class="container text-center text-md-start small">
@@ -333,17 +285,10 @@
       </div>
     </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-
-     <script src="../../../public/js/trocar-dark-light.js"></script>
-  <script src="../../../public/js/relatorio-detalhes.js"></script> 
-    
-    <script src="../../../public/js/baixarRelatorio.js"></script>
- </body>
-</html>
-
+    <script src="../../../public/js/bootstrap.bundle.min.js"></script>
+    <!-- Tema escuro/claro -->
+    <script src="../../../public/js/trocar-dark-light.js"></script>
+    <!-- Paginação e filtros Campanhas Realizadas -->
+    <script src="../../../public/js/relatorio.js"></script>
   </body>
 </html>

@@ -1,6 +1,4 @@
-/**
- * Adiciona um listener para a geração do PDF quando o DOM estiver completamente carregado.
- */
+
 document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById('btnBaixarPDF');
     if (btn) {
@@ -10,11 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/**
- * Gera e baixa um relatório PDF de campanha utilizando jsPDF e jspdf-autotable.
- * Extrai dados diretamente do DOM.
- * @param {HTMLElement | null} botao - O botão que acionou a função.
- */
+
 async function gerarRelatorioPDF(botao = null) {
     const PRIMARY_COLOR = [255, 108, 2]; // Laranja/Destaque
     const TEXT_COLOR = [33, 37, 41];     // Preto escuro

@@ -1,130 +1,110 @@
-  <?php include __DIR__ . '/../../Components/header-home.php'; ?>
+<?php include __DIR__ . '/../../Components/header-home.php'; ?>
 
-  <div class="container">
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow-1 pt-5 mt-5">
+    <!-- HERO -->
+    <section class="container py-5 text-center text-md-start">
+      <div class="row align-items-center g-4">
+        <div class="col-md-6">
+          <span class="text-success fw-bold fs-5">Plataforma para doações</span>
+          <h1 class="fw-bold display-5 mt-2">Conecte projetos sociais a quem quer transformar vidas</h1>
+          <p class="lead text-body-secondary mt-3">
+            Descubra ONGs que precisam de apoio e facilite doações para causas sociais com transparência e praticidade.
+          </p>
+          <div class="d-flex flex-wrap gap-2 mt-4">
+            <a href="#explorar" class="btn btn-success btn-lg">Explorar ONGs</a>
+            <a href="#sobre" class="btn btn-outline-secondary btn-lg">Saiba mais</a>
+          </div>
 
-    <header>
-      <div class="container nav">
-        <a class="brand" href="#top" style="font-weight:800; font-size:1.2rem; color:black; text-decoration:none;">
-          ConectaVidas+
-        </a>
-        <nav>
-          <ul>
-            <li><a href="#explorar">Explorar</a></li>
-            <li><a href="#sobre">Sobre</a></li>
-            <li><a href="#como">Como funciona</a></li>
-          </ul>
-        </nav>
+          <form class="d-flex mt-4" style="max-width: 480px;" action="/?url=buscar" method="get" role="search" aria-label="Buscar ONGs">
+            <input name="q" type="search" class="form-control form-control-lg me-2" placeholder="Buscar ONG, causa ou cidade..." aria-label="Pesquisar" />
+            <button class="btn btn-primary btn-lg" type="submit" aria-label="Buscar">Buscar</button>
+          </form>
+        </div>
 
-        <div class="actions">
-          <button class="menu-btn" id="menuBtn" aria-label="menu">☰</button>
-          <a class="btn secondary" href="/?url=login">Entrar</a>
-          <a class="btn" href="/?url=empresa/create">Criar Empresa</a>
-          <a class="btn" href="/?url=ong/create">Criar Ong</a>
-          <button class="btn" onclick="location.href='#cadastro'">Quero doar</button>
+        <div class="col-md-6 text-center">
+          <img src="https://images.unsplash.com/photo-1534126511673-b6899657816a?w=800&q=60" class="img-fluid rounded shadow-sm" alt="Ilustração ONG" />
         </div>
       </div>
-    </header>
+    </section>
 
-    <main class="container">
-      <!-- HERO -->
-      <section class="hero" aria-label="Apresentação">
-        <div class="hero-left">
-          <span class="kicker">Plataforma para doações</span>
-          <h1>Conecte projetos sociais a quem quer transformar vidas</h1>
-          <p class="lead">Descubra ONGs que precisam de apoio e facilite doações para causas sociais com transparência e praticidade.</p>
-
-          <div class="hero-cta">
-            <button class="btn" onclick="location.href='#explorar'">Explorar ONGs</button>
-            <a class="btn secondary" href="#sobre">Saiba mais</a>
-          </div>
-
-          <div class="search-card" style="max-width:560px">
-            <input type="search" id="searchInput" placeholder="Buscar por ONG, causa ou cidade..." />
-            <button onclick="doSearch()">Buscar</button>
-          </div>
-        </div>
-
-        <div class="hero-right">
-          <div class="mock-card">
-            <img src="https://images.unsplash.com/photo-1534126511673-b6899657816a?w=800&q=60" alt="Exemplo" style="border-radius:10px;margin-bottom:0.6rem">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <strong>Centro de Apoio</strong>
-                <div style="color:var(--muted);font-size:0.9rem">Apoio às famílias</div>
-              </div>
-              <div style="text-align:right;color:var(--muted);font-size:0.9rem">R$ 0 doado</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ONGS GRID -->
-      <section id="explorar" class="ngos">
-        <h2 style="margin:0 0 1rem 0">ONGs em destaque</h2>
-        <div class="ngos-grid" id="ngosGrid">
-          <!-- Cards serão inseridos via JS -->
-        </div>
-      </section>
-
-      <!-- HOW IT WORKS -->
-      <section id="como" class="how">
-        <div>
-          <h2>Como funciona</h2>
-          <p class="small" style="max-width:46ch;color:var(--muted)">Encontre projetos, verifique informações e doe com segurança. A plataforma facilita o contato entre instituições e doadores.</p>
-
-          <div class="steps" style="margin-top:1rem">
-            <div class="step">
-              <div class="icon">1</div>
-              <div>
-                <strong>Encontre</strong>
-                <div style="color:var(--muted);font-size:0.95rem">Busque ONGs por causa, local ou nome.</div>
-              </div>
-            </div>
-
-            <div class="step">
-              <div class="icon">2</div>
-              <div>
-                <strong>Converse</strong>
-                <div style="color:var(--muted);font-size:0.95rem">Veja o contato e as necessidades do projeto.</div>
-              </div>
-            </div>
-
-            <div class="step">
-              <div class="icon">3</div>
-              <div>
-                <strong>Doe</strong>
-                <div style="color:var(--muted);font-size:0.95rem">Contribua com segurança e acompanhe os resultados.</div>
-              </div>
+    <!-- ONGS EM DESTAQUE -->
+    <section id="explorar" class="container py-5">
+      <h2 class="fw-bold text-center mb-4">ONGs em destaque</h2>
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 rounded-4">
+            <img src="../../../public/img/co-an-ft1.png" class="card-img-top" alt="Educação" />
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold">Educar para o Futuro</h5>
+              <p class="card-text text-body-secondary">ONG dedicada a projetos educacionais em comunidades carentes.</p>
+              <a href="#" class="btn btn-outline-success">Ver mais</a>
             </div>
           </div>
         </div>
 
-        <div>
-          <h3 style="margin-top:0">Por que usar o ConectaVidas+</h3>
-          <p style="color:var(--muted)">Transparência, facilidade e alcance — a plataforma ajuda projetos a ganhar visibilidade e doadores a encontrar causas confiáveis.</p>
-          <div style="display:flex;gap:0.6rem;margin-top:1rem">
-            <button class="btn">Quero doar</button>
-            <button class="btn secondary">Cadastrar ONG</button>
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 rounded-4">
+            <img src="https://source.unsplash.com/600x400/?animals,rescue" class="card-img-top" alt="Animais" />
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold">Amigos de Quatro Patas</h5>
+              <p class="card-text text-body-secondary">Cuidando de animais abandonados e promovendo adoção responsável.</p>
+              <a href="#" class="btn btn-outline-success">Ver mais</a>
+            </div>
           </div>
         </div>
-      </section>
 
-    </main>
-
-    <!-- Footer -->
-    <footer>
-      <div class="container foot-grid">
-        <div>
-          <strong>ConectaVidas+</strong>
-          <div class="small" style="margin-top:6px">© <span id="year"></span> ConectaVidas+. Todos os direitos reservados.</div>
-        </div>
-
-        <div style="display:flex;gap:0.8rem;align-items:center">
-          <a href="#sobre" class="small">Sobre</a>
-          <a href="#contato" class="small">Contato</a>
-          <a href="#privacidade" class="small">Privacidade</a>
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 rounded-4">
+            <img src="https://source.unsplash.com/600x400/?environment,trees" class="card-img-top" alt="Meio Ambiente" />
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold">Verde Esperança</h5>
+              <p class="card-text text-body-secondary">Projetos voltados à preservação ambiental e reflorestamento urbano.</p>
+              <a href="#" class="btn btn-outline-success">Ver mais</a>
+            </div>
+          </div>
         </div>
       </div>
-    </footer>
-  </div>
-  <?php include __DIR__ . '/../../Components/footer-home.php'; ?>
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section id="como" class="container py-5">
+      <h2 class="fw-bold text-center mb-4">Como funciona</h2>
+      <div class="row text-center">
+        <div class="col-md-4">
+          <div class="p-3">
+            <div class="fs-2 text-success mb-2"><i class="bi bi-search-heart"></i></div>
+            <h5 class="fw-bold">Encontre</h5>
+            <p class="text-body-secondary">Busque ONGs por causa, local ou nome e descubra projetos autênticos.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3">
+            <div class="fs-2 text-primary mb-2"><i class="bi bi-chat-heart"></i></div>
+            <h5 class="fw-bold">Curtidas</h5>
+            <p class="text-body-secondary">Curta o projeto se você se identificar com a causa. Sua curtida aumenta a visibilidade e ajuda a atrair apoiadores e doações.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3">
+            <div class="fs-2 text-warning mb-2"><i class="bi bi-heart-arrow"></i></div>
+            <h5 class="fw-bold">Doe</h5>
+            <p class="text-body-secondary">Contribua com segurança e acompanhe o impacto de sua doação.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section id="sobre" class="container py-5 text-center">
+      <h2 class="fw-bold mb-3">Sobre o ConectaVidas+</h2>
+      <p class="text-body-secondary fs-5 mx-auto" style="max-width: 800px;">
+        O ConectaVidas+ é uma plataforma que aproxima quem quer ajudar de quem precisa de apoio.
+        Criamos uma ponte entre empresas, ONGs e doadores individuais, com transparência, propósito e impacto real.
+      </p>
+    </section>
+  </main>
+
+</div>
+
+<?php include __DIR__ . '/../../Components/footer-home.php'; ?>

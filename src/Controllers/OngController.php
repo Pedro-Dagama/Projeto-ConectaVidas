@@ -135,6 +135,6 @@ class OngController
             'campaigns' => $organizacao['campaigns'] ?? []
         ];
 
-        require_once __DIR__ . '/../Views/ong/ong.php';
+        require_once __DIR__ . '/../Views/ong/dashboard.php';
     }
 }

@@ -88,6 +88,6 @@ class EmpresaController
 
         $empresa = $this->repo->getEmpresaByOrganizacao((int)$organizacao['id_organizacao']);
 
-        require_once __DIR__ . '/../Views/empresa/empresa.php';
+        require_once __DIR__ . '/../Views/empresa/dashboard.php';
     }
 }

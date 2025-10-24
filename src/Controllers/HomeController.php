@@ -15,14 +15,14 @@ class HomeController
     {
         $this->ensureLogged();
         $this->ensureRole(TipoUsuario::EMPRESA->value);
-        require_once __DIR__ . '/../Views/empresa/empresa.php';
+        require_once __DIR__ . '/../Views/empresa/dashboard.php';
     }
 
     public function ong(): void
     {
         $this->ensureLogged();
         $this->ensureRole(TipoUsuario::ONG->value);
-        require_once __DIR__ . '/../Views/ong/ong.php';
+        require_once __DIR__ . '/../Views/ong/dashboard.php';
     }
 
     public function admin(): void

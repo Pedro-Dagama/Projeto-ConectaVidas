@@ -1,3 +1,7 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+?>
+
 <?php include __DIR__ . '/../../Components/header-campanha.php'; ?>
 <!-- Header (você pode incluir seu header comum aqui) -->
 <header class="main-header">
@@ -117,21 +121,43 @@
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div class="me-3">
                                             <h6 class="mb-1 fw-bold"><?= htmlspecialchars($c['titulo']) ?></h6>
-                                            <p class="mb-1 text-secondary">Meta: <strong>R$ <?= number_format((float)$c['meta'], 2, ',', '.') ?></strong> | Arrecadado: <strong>R$ <?= number_format((float)$c['valor_arrecadado'], 2, ',', '.') ?></strong></p>
+                                            <p class="mb-1 text-secondary">
+                                                Meta: <strong>R$ <?= number_format((float)$c['meta'], 2, ',', '.') ?></strong> |
+                                                Arrecadado: <strong>R$ <?= number_format((float)$c['valor_arrecadado'], 2, ',', '.') ?></strong>
+                                            </p>
                                             <p class="mb-1 text-secondary">Categoria: <strong><?= htmlspecialchars($c['categoria_nome'] ?? '') ?></strong></p>
-                                            <small class="text-muted">Status: <?= htmlspecialchars($c['status']) ?> | Localização: <?= htmlspecialchars($c['localizacao'] ?? '-') ?></small>
+                                            <small class="text-muted">
+                                                Status: <?= htmlspecialchars($c['status']) ?> |
+                                                Localização: <?= htmlspecialchars($c['localizacao'] ?? '-') ?>
+                                            </small>
                                         </div>
+
                                         <div class="d-flex flex-column gap-2">
-                                            <a href="/?url=campanha/view&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-primary btn-sm"><i class="bi bi-file-earmark-text"></i> Relatório</a>
-                                            <a href="/?url=doacao/create&campanha_id=<?= (int)$c['id_campanha'] ?>" class="btn btn-success btn-sm">
-                                                <i class="bi bi-cash-coin"></i> Doar
+                                            <a href="/?url=campanha/view&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-file-earmark-text"></i> Relatório
                                             </a>
-                                            <a href="/?url=campanha/edit&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-success btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>
-                                            <a href="/?url=campanha/close&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle"></i> Encerrar</a>
+
+                                            <?php if (isset($_SESSION['user']) && ($_SESSION['user']['tipo_usuario'] ?? '') === 'empresa'): ?>
+                                                <!-- Empresa pode doar -->
+                                                <a href="/?url=doacao/create&campanha_id=<?= (int)$c['id_campanha'] ?>" class="btn btn-success btn-sm">
+                                                    <i class="bi bi-cash-coin"></i> Doar
+                                                </a>
+                                            <?php elseif (isset($_SESSION['user']) && ($_SESSION['user']['tipo_usuario'] ?? '') === 'ong'): ?>
+                                                <!-- ONG pode editar -->
+                                                <a href="/?url=campanha/edit&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-success btn-sm">
+                                                    <i class="bi bi-pencil-square"></i> Editar
+                                                </a>
+                                            <?php endif; ?>
+
+                                            <!-- Apenas ONG deve poder encerrar -->
+                                            <?php if (isset($_SESSION['user']) && ($_SESSION['user']['tipo_usuario'] ?? '') === 'ong'): ?>
+                                                <a href="/?url=campanha/close&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-danger btn-sm">
+                                                    <i class="bi bi-x-circle"></i> Encerrar
+                                                </a>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
-
                             <?php endforeach; ?>
                         <?php else: ?>
                             <div class="text-center text-muted">Nenhuma campanha cadastrada ainda.</div>

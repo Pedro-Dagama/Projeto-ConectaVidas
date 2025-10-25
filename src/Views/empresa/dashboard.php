@@ -45,7 +45,7 @@ $accountLimit = $empresa['account_limit'] ?? 'R$ 5.000,00';
 <header class="main-header">
     <div class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
         <div class="d-flex align-items-center me-4">
-            <a href="#" class="text-decoration-none text-body">
+            <a href="/?url=home" class="text-decoration-none text-body">
                 <span class="fw-bold fs-1">ConectaVidas+</span>
             </a>
         </div>

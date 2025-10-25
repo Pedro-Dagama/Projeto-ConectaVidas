@@ -7,6 +7,15 @@ $ong = $_SESSION['ong'] ?? null;
 $user = $_SESSION['user'] ?? null;
 ?>
 
+<!-- Header -->
+<header class="main-header">
+    <!-- Desktop -->
+    <div class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
+        <div class="d-flex align-items-center me-4">
+            <a href="/?url=home" class="text-decoration-none text-body">
+                <span class="fw-bold fs-1">ConectaVidas+</span>
+            </a>
+        </div>
 
         <div class="d-flex align-items-center gap-4 ms-auto">
             <button class="theme-toggle btn btn-outline-secondary fs-5" title="Alternar Tema">

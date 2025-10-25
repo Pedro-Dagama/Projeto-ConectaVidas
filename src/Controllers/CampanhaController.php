@@ -197,6 +197,83 @@ class CampanhaController
         return (int)$res['id_ong'];
     }
 
+    public function store(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /?url=campanha');
+            exit();
+        }
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'ong') {
+            http_response_code(403);
+            echo "Acesso negado.";
+            exit();
+        }
+
+        $titulo = trim((string)($_POST['titulo'] ?? ''));
+        $categoriaKey = trim((string)($_POST['categoria'] ?? ''));
+        $descricao = trim((string)($_POST['descricao'] ?? ''));
+        $meta = (float)($_POST['meta'] ?? 0);
+        $prazo = $_POST['prazo'] ?? null;
+
+        $errors = [];
+        if ($titulo === '') $errors[] = "Título é obrigatório.";
+        if ($categoriaKey === '') $errors[] = "Categoria é obrigatória.";
+        if ($descricao === '') $errors[] = "Descrição é obrigatória.";
+        if ($meta <= 0) $errors[] = "Meta inválida.";
+        if ($prazo === null || $prazo === '') $errors[] = "Data (prazo) é obrigatória.";
+
+        if (!empty($errors)) {
+            $_SESSION['form_errors'] = $errors;
+            header('Location: /?url=campanha');
+            exit();
+        }
+
+        // encontra categoria id
+        $categoriaId = $this->repo->getCategoriaIdByKey($categoriaKey);
+        if ($categoriaId === null) {
+            $stmt = $this->pdo->prepare('INSERT INTO categoria (nome, descricao) VALUES (:nome, :descricao)');
+            $stmt->execute([':nome' => $categoriaKey, ':descricao' => ucfirst($categoriaKey)]);
+            $categoriaId = (int)$this->pdo->lastInsertId();
+        }
+
+        // obtém ong id
+        $idUsuario = (int)($_SESSION['user']['id_usuario'] ?? 0);
+        $ongId = $this->getOngIdByUsuario($idUsuario);
+        if ($ongId === null) {
+            $_SESSION['form_errors'] = ['Usuário não está associado a uma ONG.'];
+            header('Location: /?url=campanha');
+            exit();
+        }
+
+        // preparar dados
+        $data = [
+            'titulo' => $titulo,
+            'descricao' => $descricao,
+            'objetivo' => null,
+            'meta' => $meta,
+            'localizacao' => null,
+            'data_encerramento' => $prazo . ' 23:59:59',
+            'categoria_id' => $categoriaId,
+            'ong_id' => $ongId,
+        ];
+
+        try {
+            $campanhaId = $this->repo->createCampanha($data);
+            $_SESSION['success_message'] = "Campanha criada com sucesso!";
+            header('Location: /?url=campanha');
+            exit();
+        } catch (\Throwable $e) {
+            $_SESSION['form_errors'] = ['Erro ao salvar campanha.'];
+            header('Location: /?url=campanha');
+            exit();
+        }
+    }
+
     /* public function index(): void
     {
         // Proteção: usuário logado e tipo ONG

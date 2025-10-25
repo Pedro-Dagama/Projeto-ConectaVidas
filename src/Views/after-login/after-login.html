@@ -16,7 +16,6 @@
   <!-- Header Desktop -->
   <header class="main-header">
     <div class="d-none d-md-flex container-fluid justify-content-between align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
-      <!-- Logo -->
       <div class="logo">
         <a href="#" class="text-decoration-none text-body">
           <span class="fw-bold fs-1">ConectaVidas+</span>
@@ -54,7 +53,6 @@
             <img src="https://github.com/mdo.png" alt="avatar" width="40" height="40" class="rounded-circle" />
           </a>
           <ul class="dropdown-menu dropdown-menu-end fs-5">
-            <li><a class="dropdown-item" href="#">Novo projeto</a></li>
             <li><a class="dropdown-item" href="#">Configurações</a></li>
             <li><a class="dropdown-item" href="#">Perfil</a></li>
             <li><hr class="dropdown-divider" /></li>
@@ -66,31 +64,60 @@
 
     <!-- Header Mobile -->
     <div class="d-flex d-md-none flex-column bg-body fixed-top border-bottom shadow-sm">
-      <!-- Topo mobile: logo, tema e chat -->
-      <div class="d-flex justify-content-between align-items-center px-3 pt-2 pb-1">
-        <a href="#" class="text-decoration-none logo text-body">
-          <span class="fw-bold fs-3">ConectaVidas+</span>
-        </a>
-        <button class="theme-toggle btn btn-outline-secondary fs-4" title="Alternar Tema">
-          <i class="bi bi-moon-fill"></i>
-        </button>
-        <a href="#" class="text-body"><i class="bi bi-chat fs-4"></i></a>
-      </div>
-      <!-- Pesquisa mobile -->
-      <div class="px-3 pb-2">
-        <form role="search">
-          <input type="search" class="form-control" placeholder="Buscar campanhas..." aria-label="Search" />
-        </form>
-      </div>
+      <nav class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none">
+        <div class="container-fluid">
+          <a class="navbar-brand fw-bold fs-3 me-2" href="#">ConectaVidas+</a>
+
+          <div class="d-flex align-items-center">
+            <div class="dropdown d-md-none me-2">
+              <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="mobileCategoriasBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                Categorias
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="mobileCategoriasBtn">
+                <li><a class="dropdown-item" href="#">Educação</a></li>
+                <li><a class="dropdown-item" href="#">Saúde</a></li>
+                <li><a class="dropdown-item" href="#">Meio Ambiente</a></li>
+                <li><a class="dropdown-item" href="#">Animais</a></li>
+                <li><a class="dropdown-item" href="#">Outros</a></li>
+              </ul>
+            </div>
+
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarMobile"
+              aria-controls="navbarMobile"
+              aria-expanded="false"
+              aria-label="Alternar navegação">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+
+          <div class="collapse navbar-collapse" id="navbarMobile">
+            <ul class="navbar-nav ms-auto text-center">
+              <!-- Botão de Tema no Mobile -->
+              <li class="nav-item mt-2">
+                <button
+                  class="theme-toggle btn btn-outline-secondary w-100"
+                  title="Alternar Tema"
+                  type="button">
+                  <i class="bi bi-moon-fill"></i> Modo
+                </button>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Perfil</a>
+              </li> 
+              <li class="nav-item">
+                <a class="nav-link text-danger" href="#">Sair</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     </div>
 
-    <!-- Navbar mobile inferior -->
-    <nav class="navbar border-top fixed-bottom d-flex d-md-none justify-content-around py-2 shadow-sm bg-body">
-      <a href="#" class="text-body text-center"><i class="bi bi-house-door fs-4"></i></a>
-      <a href="#" class="text-body text-center"><i class="bi bi-search fs-4"></i></a>
-      <a href="#" class="text-body text-center"><i class="bi bi-plus-square fs-4"></i></a>
-      <a href="#" class="text-body text-center"><i class="bi bi-person-circle fs-4"></i></a>
-    </nav>
+    
   </header>
 
   <!-- Conteúdo principal -->
@@ -235,18 +262,8 @@
     </div>
   </footer>
 
-  <!-- Footer Mobile -->
-  <footer class="bg-body-tertiary text-body py-2 d-md-none fixed-bottom" data-bs-theme="dark">
-    <div class="d-flex justify-content-around">
-      <a href="#" class="text-body text-center"><i class="bi bi-house-door fs-4"></i></a>
-      <a href="#" class="text-body text-center"><i class="bi bi-search fs-4"></i></a>
-      <a href="#" class="text-body text-center"><i class="bi bi-plus-square fs-4"></i></a>
-      <a href="#" class="text-body text-center"><i class="bi bi-person-circle fs-4"></i></a>
-    </div>
-  </footer>
-
   <!-- Scripts Bootstrap e alternar tema -->
   <script src="../../../public/js/bootstrap.bundle.min.js"></script>
-  <script src="../../../public/js/trocar-dark-light.js"></script>
+  <script src="../../../public/js/alternarTema.js"></script>
 </body>
 </html>

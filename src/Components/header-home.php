@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-   
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <title>ConectaVidas+ — Home</title>
@@ -56,8 +55,8 @@
           aria-label="Alternar navegação">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarMobile">
-          <ul class="navbar-nav ms-auto">
+        <div class="collapse navbar-collapse " id="navbarMobile">
+          <ul class="navbar-nav ms-auto text-center">
             <!-- Botão de Tema no Mobile -->
             <li class="nav-item mt-2">
               <button

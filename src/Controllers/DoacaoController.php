@@ -313,4 +313,44 @@ class DoacaoController
             exit();
         }
     }
+
+    public function historico(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+
+        // assegura que é empresa (redireciona para login se não)
+        $empresaId = $this->ensureEmpresaOrRedirect();
+        if ($empresaId === null) {
+            // ensureEmpresaOrRedirect já faz redirect, mas por via das dúvidas:
+            header('Location: /?url=login');
+            exit();
+        }
+
+        $campanhaId = (int)($_GET['campanha_id'] ?? 0);
+        if ($campanhaId <= 0) {
+            $_SESSION['form_errors'] = ['Campanha inválida.'];
+            header('Location: /?url=empresa');
+            exit();
+        }
+
+        // busca campanha (para título / info)
+        $campanha = $this->campanhaRepository->findById($campanhaId);
+        if (!$campanha) {
+            $_SESSION['form_errors'] = ['Campanha não encontrada.'];
+            header('Location: /?url=empresa');
+            exit();
+        }
+
+        // pega doações feitas por esta empresa para esta campanha
+        // (usa o método já existente findByEmpresa que aceita campanhaId)
+        try {
+            $doacoes = $this->doacaoRepository->findByEmpresa($empresaId, $campanhaId, 100, 0);
+        } catch (\Throwable $e) {
+            error_log("DoacaoController::historico error: " . $e->getMessage());
+            $doacoes = [];
+        }
+
+        // variáveis que a view poderá usar: $campanha, $doacoes
+        require_once __DIR__ . '/../Views/campanha/campanha-historico.php';
+    }
 }

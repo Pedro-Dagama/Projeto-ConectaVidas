@@ -55,6 +55,9 @@ $routes = [
     // Doação
     'doacao/create' => [\Controllers\DoacaoController::class, 'create'],   // mostra formulário de doação para uma campanha
     'doacao/store'  => [\Controllers\DoacaoController::class, 'store'],    // recebe POST e cria doação (+ pagamento)
+    // em public/index.php (no array $routes)
+    'doacao/historico' => [\Controllers\DoacaoController::class, 'historico'],
+
 
 
 ];

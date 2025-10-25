@@ -282,6 +282,10 @@ $accountLimit = $empresa['account_limit'] ?? 'R$ 5.000,00';
                 <div class="card-header fw-bold bg-body-secondary">
                     Histórico de Doações
                 </div>
+                <a href="/?url=doacao/historico&campanha_id=<?= (int)($c['id_campanha'] ?? 0) ?>" class="btn btn-outline-info btn-sm">
+                    <i class="bi bi-clock-history"></i> Histórico
+                </a>
+
                 <div class="card-body">
                     <div class="list-group" id="historyList">
                         <!-- Exemplo estático (substitua por dados reais) -->

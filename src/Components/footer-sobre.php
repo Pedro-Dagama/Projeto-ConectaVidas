@@ -1,7 +1,5 @@
 <!-- Footer -->
-<footer
-    class="bg-body-tertiary text-body py-2 mt-auto"
-    data-bs-theme="dark">
+<footer class="bg-body-tertiary text-body py-2 mt-auto" data-bs-theme="dark">
     <div class="container text-center text-md-start small">
         <div class="row">
             <div class="col-md-4 mb-2">
@@ -11,15 +9,9 @@
             <div class="col-md-4 mb-2">
                 <h6 class="fw-bold">Links úteis</h6>
                 <ul class="list-unstyled">
-                    <li>
-                        <a href="/?url=sobre" class="text-body-secondary text-decoration-none">Sobre</a>
-                    </li>
-                    <li>
-                        <a href="#" class="text-body-secondary text-decoration-none">Campanhas</a>
-                    </li>
-                    <li>
-                        <a href="#" class="text-body-secondary text-decoration-none">Contato</a>
-                    </li>
+                    <li><a href="#" class="text-body-secondary text-decoration-none">Sobre</a></li>
+                    <li><a href="#" class="text-body-secondary text-decoration-none">Campanhas</a></li>
+                    <li><a href="#" class="text-body-secondary text-decoration-none">Contato</a></li>
                 </ul>
             </div>
             <div class="col-md-4 mb-2 text-center">
@@ -33,13 +25,11 @@
             </div>
         </div>
         <hr class="my-1 border-body-secondary" />
-        <p class="text-center mb-0 text-body-secondary">
-            &copy; 2025 ConectaVidas+. Todos os direitos reservados.
-        </p>
+        <p class="text-center mb-0 text-body-secondary">&copy; 2025 ConectaVidas+. Todos os direitos reservados.</p>
     </div>
 </footer>
+
 <script src="/js/bootstrap.bundle.min.js"></script>
-<script src="/js/home-script.js"></script>
 <script src="/js/alternarTema.js"></script>
 </body>
 

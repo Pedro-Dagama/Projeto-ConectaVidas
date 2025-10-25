@@ -13,6 +13,7 @@ use Controllers\LoginController;
 use Controllers\RegisterController;
 use Controllers\EmpresaController;
 use Controllers\OngController;
+use Controllers\SobreController;
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -23,14 +24,15 @@ $url = trim((string)$urlRaw, " \t\n\r\0\x0B/");
 
 $routes = [
     'home' => [HomeController::class, 'index'],
+    'sobre' => [SobreController::class, 'index'],
     'login' => [LoginController::class, 'showLoginForm'],
     'login/authenticate' => [LoginController::class, 'authenticate'],
     'logout' => [LoginController::class, 'logout'],
-    'empresa' => [HomeController::class, 'empresa'],
+    #'empresa' => [HomeController::class, 'empresa'],
     'empresa' => [EmpresaController::class, 'dashboard'],
     'empresa/create' => [EmpresaController::class, 'showCreateForm'],
     'empresa/store' => [EmpresaController::class, 'store'],
-    'ong' => [HomeController::class, 'ong'],
+    #'ong' => [HomeController::class, 'ong'],
     'ong' => [OngController::class, 'dashboard'],
     'ong/create' => [OngController::class, 'showCreateForm'],
     'ong/store' => [OngController::class, 'store'],

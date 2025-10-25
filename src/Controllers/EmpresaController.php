@@ -4,6 +4,8 @@ namespace Controllers;
 
 use Config\Database;
 use Repositories\EmpresaRepository;
+use Repositories\DoacaoRepository;
+use Repositories\CampanhaRepository;
 
 class EmpresaController
 {
@@ -90,7 +92,7 @@ class EmpresaController
 
         require_once __DIR__ . '/../Views/empresa/dashboard.php';
     } */
-    public function dashboard(): void
+    /*     public function dashboard(): void
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -104,6 +106,77 @@ class EmpresaController
         $campanhasAtivas = $campRepo->findActiveCampaigns();
 
         // passe $campanhasAtivas para a view
+        require_once __DIR__ . '/../Views/empresa/dashboard.php';
+    } */
+
+    public function dashboard(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+
+        // proteção simples por tipo
+        if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'empresa') {
+            header('Location: /?url=login');
+            exit();
+        }
+
+        // tentar extrair o id do usuário por várias chaves comuns
+        $user = $_SESSION['user'] ?? [];
+        $possibleKeys = ['id_usuario', 'id', 'usuario_id', 'idUser', 'user_id'];
+        $userId = 0;
+        foreach ($possibleKeys as $k) {
+            if (!empty($user[$k]) && is_numeric($user[$k])) {
+                $userId = (int)$user[$k];
+                break;
+            }
+        }
+
+        // log para debug (remova depois)
+        error_log("EmpresaController::dashboard - user session keys: " . json_encode(array_keys($user)));
+        error_log("EmpresaController::dashboard - resolved userId={$userId}");
+
+        if ($userId <= 0) {
+            // fallback: talvez a sessão já contenha organizacao/empresa diretamente
+            if (!empty($user['organizacao_id']) || !empty($user['organizacao'])) {
+                // tente usar dados da sessão (se existirem)
+                // (aqui tentamos popular $organizacao/$empresa para não quebrar a view)
+                $organizacao = $user['organizacao'] ?? ['id_organizacao' => (int)($user['organizacao_id'] ?? 0)];
+            } else {
+                // não temos id de usuário nem organização: volta pro login
+                error_log("EmpresaController::dashboard - nenhum userId ou organização encontrado na sessão, redirecionando para login.");
+                header('Location: /?url=login');
+                exit();
+            }
+        } else {
+            // pega organizacao via repository
+            $organizacao = $this->empresaRepository->getOrganizacaoByUsuario($userId);
+            if (!$organizacao) {
+                // sem organização vinculada
+                require_once __DIR__ . '/../Views/empresa/sem_organizacao.php';
+                return;
+            }
+        }
+
+        // pega empresa a partir da organização (se possível)
+        $empresa = $this->empresaRepository->getEmpresaByOrganizacao((int)($organizacao['id_organizacao'] ?? 0));
+        $empresaId = (int)($empresa['id_empresa'] ?? 0);
+
+        // campanhas ativas
+        $campRepo = new CampanhaRepository(Database::getConnection());
+        $campanhasAtivas = $campRepo->findActiveCampaigns();
+
+        // histórico de doações (se tivermos empresaId)
+        $historicoDoacoes = [];
+        if ($empresaId > 0) {
+            $doacoesRepo = new DoacaoRepository(Database::getConnection());
+            try {
+                $historicoDoacoes = $doacoesRepo->getHistoricoPorEmpresa($empresaId);
+            } catch (\Throwable $e) {
+                error_log("EmpresaController::dashboard - erro ao buscar historicoDoacoes: " . $e->getMessage());
+                $historicoDoacoes = [];
+            }
+        }
+
+        // inclui a view (ela espera $organizacao, $empresa, $campanhasAtivas, $historicoDoacoes)
         require_once __DIR__ . '/../Views/empresa/dashboard.php';
     }
 }

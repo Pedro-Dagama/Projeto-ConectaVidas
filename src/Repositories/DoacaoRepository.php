@@ -38,4 +38,24 @@ class DoacaoRepository
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
+
+    public function getHistoricoPorEmpresa(int $empresaId): array
+    {
+        $sql = "
+        SELECT d.id_doacao, d.valor, d.data_doacao, d.status,
+               c.titulo AS campanha, c.id_campanha,
+               COALESCE(u.nome, 'Anônimo') AS doador_nome,
+               d.forma_pagamento AS metodo_pagamento
+        FROM doacao d
+        INNER JOIN campanha c ON d.campanha_id_campanha = c.id_campanha
+        LEFT JOIN usuario u ON d.usuario_id_usuario = u.id_usuario
+        WHERE d.empresa_id_empresa = :empresaId
+        ORDER BY d.data_doacao DESC
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':empresaId', $empresaId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

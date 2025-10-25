@@ -91,4 +91,50 @@ class CampanhaRepository
         $stmt->execute([':id' => $id]);
         return $stmt->rowCount() > 0;
     }
+
+    // Retorna campanhas ativas com dados da ong (join)
+    public function findActiveCampaigns(): array
+    {
+        $sql = "
+            SELECT c.*, cat.nome as categoria_nome, o.id_ong, org.razao_social as ong_nome, org.id_organizacao, org.cnpj, org.razao_social, org.tipo
+            FROM campanha c
+            LEFT JOIN categoria cat ON cat.id_categoria = c.categoria_id_categoria
+            LEFT JOIN ong o ON o.id_ong = c.ong_id_ong
+            LEFT JOIN organizacao org ON org.id_organizacao = o.organizacao_id_organizacao
+            WHERE c.status = 'ativa'
+            ORDER BY c.data_criacao DESC
+        ";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /*     public function findById(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT c.*, cat.nome as categoria_nome, o.id_ong, org.razao_social as ong_nome, org.id_organizacao, org.cnpj
+            FROM campanha c
+            LEFT JOIN categoria cat ON cat.id_categoria = c.categoria_id_categoria
+            LEFT JOIN ong o ON o.id_ong = c.ong_id_ong
+            LEFT JOIN organizacao org ON org.id_organizacao = o.organizacao_id_organizacao
+            WHERE c.id_campanha = :id
+            LIMIT 1
+        ");
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ?: null;
+    } */
+
+    // opcional: campanhas de uma ONG específica
+    public function findByOngId(int $idOng): array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT c.*, cat.nome as categoria_nome
+            FROM campanha c
+            LEFT JOIN categoria cat ON cat.id_categoria = c.categoria_id_categoria
+            WHERE c.ong_id_ong = :idOng
+            ORDER BY c.data_criacao DESC
+        ");
+        $stmt->execute([':idOng' => $idOng]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -31,6 +31,7 @@
 
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/trocar-dark-light.js"></script>
+<script src="/js/alternarTema.js"></script>
 </body>
 
 </html>

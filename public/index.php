@@ -47,6 +47,16 @@ $routes = [
     'campanha/edit' => [CampanhaController::class, 'edit'],
     'campanha/update' => [CampanhaController::class, 'update'],
     'campanha/close' => [CampanhaController::class, 'close'],
+    // Doação (para empresas)
+    #'doacao' => [\Controllers\DoacaoController::class, 'index'],            // lista campanhas disponíveis (para empresas)
+    'doacao/checkout' => [\Controllers\DoacaoController::class, 'checkout'], // formulário para doar (campaign id via GET)
+    #'doacao/store' => [\Controllers\DoacaoController::class, 'store'],      // processa doação (POST)
+    'doacao/thankyou' => [\Controllers\DoacaoController::class, 'thankyou'], // página final
+    // Doação
+    'doacao/create' => [\Controllers\DoacaoController::class, 'create'],   // mostra formulário de doação para uma campanha
+    'doacao/store'  => [\Controllers\DoacaoController::class, 'store'],    // recebe POST e cria doação (+ pagamento)
+
+
 ];
 
 if (!array_key_exists($url, $routes)) {

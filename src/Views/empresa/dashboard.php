@@ -161,7 +161,9 @@ $accountLimit = $empresa['account_limit'] ?? 'R$ 5.000,00';
         </div>
 
         <!-- Informações e Conta / Doações -->
+        <!-- Informações e Conta / Campanhas à direita -->
         <div class="col-12 col-md-7">
+            <!-- Informações Cadastrais (mantido) -->
             <section class="card shadow-sm mb-4">
                 <div class="card-header fw-bold bg-body-secondary d-flex justify-content-between align-items-center">
                     <span>Informações Cadastrais</span>
@@ -204,6 +206,7 @@ $accountLimit = $empresa['account_limit'] ?? 'R$ 5.000,00';
                 </div>
             </section>
 
+            <!-- Conta Empresarial (mantido) -->
             <section class="card saldo-card shadow-sm mb-4">
                 <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
                     <div>
@@ -218,14 +221,70 @@ $accountLimit = $empresa['account_limit'] ?? 'R$ 5.000,00';
             </section>
         </div>
 
-        <!-- Histórico de Doações -->
+        <!-- Coluna direita: Campanhas (card igual às Informações) + Histórico de doações -->
         <div class="col-12 col-md-5">
+            <!-- Campanhas Disponíveis (card com mesmo estilo de header) -->
+            <section class="card shadow-sm mb-4">
+                <div class="card-header fw-bold bg-body-secondary d-flex justify-content-between align-items-center">
+                    <span>Campanhas Disponíveis</span>
+
+                </div>
+
+                <div class="card-body p-0">
+                    <?php if (!empty($campanhasAtivas) && is_array($campanhasAtivas)): ?>
+                        <div class="list-group list-group-flush">
+                            <?php foreach ($campanhasAtivas as $c): ?>
+                                <div class="list-group-item d-flex justify-content-between align-items-start py-3">
+                                    <div class="me-3" style="min-width:0;">
+                                        <h6 class="mb-1 fw-bold text-truncate"><?= htmlspecialchars($c['titulo'] ?? '—') ?></h6>
+                                        <p class="mb-1 small text-truncate" style="max-width:40ch;"><?= htmlspecialchars($c['descricao'] ?? '-') ?></p>
+                                        <p class="mb-0 small text-muted">
+                                            ONG: <strong><?= htmlspecialchars($c['ong_nome'] ?? '-') ?></strong>
+                                            &nbsp;|&nbsp;
+                                            Meta: <strong>R$ <?= number_format((float)($c['meta'] ?? 0), 2, ',', '.') ?></strong>
+                                        </p>
+                                        <small class="text-muted">
+                                            Status: <?= htmlspecialchars($c['status'] ?? '-') ?>
+                                            <?php if (!empty($c['data_encerramento'])): ?>
+                                                &nbsp;|&nbsp; Encerramento: <?= htmlspecialchars(date('d/m/Y', strtotime($c['data_encerramento']))) ?>
+                                            <?php endif; ?>
+                                        </small>
+                                    </div>
+
+                                    <div class="d-flex flex-column gap-2 ms-2">
+                                        <a href="/?url=doacao/create&campanha_id=<?= (int)($c['id_campanha'] ?? 0) ?>" class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-eye"></i> Ver
+                                        </a>
+
+                                        <?php if (!empty($_SESSION['user']['tipo_usuario']) && $_SESSION['user']['tipo_usuario'] === 'empresa'): ?>
+                                            <a href="/?url=doacao/create&campanha_id=<?= (int)($c['id_campanha'] ?? 0) ?>" class="btn btn-success btn-sm">
+                                                <i class="bi bi-cash-coin"></i> Doar
+                                            </a>
+                                        <?php else: ?>
+                                            <a href="/?url=login" class="btn btn-outline-secondary btn-sm" title="Entrar para doar">
+                                                <i class="bi bi-box-arrow-in-right"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="p-3">
+                            <div class="alert alert-info mb-0">Nenhuma campanha disponível no momento.</div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </section>
+
+            <!-- Histórico de Doações (abaixo das campanhas) -->
             <section class="card shadow-sm mb-4">
                 <div class="card-header fw-bold bg-body-secondary">
                     Histórico de Doações
                 </div>
                 <div class="card-body">
                     <div class="list-group" id="historyList">
+                        <!-- Exemplo estático (substitua por dados reais) -->
                         <div class="list-group-item py-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
@@ -261,7 +320,6 @@ $accountLimit = $empresa['account_limit'] ?? 'R$ 5.000,00';
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>

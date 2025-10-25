@@ -123,11 +123,15 @@
                                         </div>
                                         <div class="d-flex flex-column gap-2">
                                             <a href="/?url=campanha/view&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-primary btn-sm"><i class="bi bi-file-earmark-text"></i> Relatório</a>
+                                            <a href="/?url=doacao/create&campanha_id=<?= (int)$c['id_campanha'] ?>" class="btn btn-success btn-sm">
+                                                <i class="bi bi-cash-coin"></i> Doar
+                                            </a>
                                             <a href="/?url=campanha/edit&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-success btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>
                                             <a href="/?url=campanha/close&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle"></i> Encerrar</a>
                                         </div>
                                     </div>
                                 </div>
+
                             <?php endforeach; ?>
                         <?php else: ?>
                             <div class="text-center text-muted">Nenhuma campanha cadastrada ainda.</div>

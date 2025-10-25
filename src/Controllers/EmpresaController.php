@@ -65,7 +65,7 @@ class EmpresaController
         }
     }
 
-    public function dashboard(): void
+    /* public function dashboard(): void
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (empty($_SESSION['user'])) {
@@ -88,6 +88,22 @@ class EmpresaController
 
         $empresa = $this->repo->getEmpresaByOrganizacao((int)$organizacao['id_organizacao']);
 
+        require_once __DIR__ . '/../Views/empresa/dashboard.php';
+    } */
+    public function dashboard(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+
+        // proteção: redireciona se não for empresa
+        if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'empresa') {
+            header('Location: /?url=login');
+            exit();
+        }
+
+        $campRepo = new \Repositories\CampanhaRepository(\Config\Database::getConnection());
+        $campanhasAtivas = $campRepo->findActiveCampaigns();
+
+        // passe $campanhasAtivas para a view
         require_once __DIR__ . '/../Views/empresa/dashboard.php';
     }
 }

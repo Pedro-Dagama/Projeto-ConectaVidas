@@ -12,14 +12,14 @@ use PDO;
 class DoacaoController
 {
     private PDO $pdo;
-    private DoacaoRepository $doacaoRepo;
-    private CampanhaRepository $campRepo;
+    private DoacaoRepository $doacaoRepository;
+    private CampanhaRepository $campanhaRepository;
 
     public function __construct()
     {
         $this->pdo = Database::getConnection();
-        $this->doacaoRepo = new DoacaoRepository($this->pdo);
-        $this->campRepo = new CampanhaRepository($this->pdo);
+        $this->doacaoRepository = new DoacaoRepository($this->pdo);
+        $this->campanhaRepository = new CampanhaRepository($this->pdo);
     }
 
     private function ensureEmpresaOrRedirect(): ?int
@@ -56,7 +56,7 @@ class DoacaoController
             exit();
         }
 
-        $campanha = $this->campRepo->findById($campanhaId);
+        $campanha = $this->campanhaRepository->findById($campanhaId);
         if (!$campanha) {
             $_SESSION['form_errors'] = ['Campanha não encontrada.'];
             header('Location: /?url=home');
@@ -258,7 +258,7 @@ class DoacaoController
         if (!in_array($forma, $allowed, true)) $errors[] = "Forma de pagamento inválida.";
 
         // checa existência da campanha
-        $campanha = $this->campRepo->findById($campanhaId);
+        $campanha = $this->campanhaRepository->findById($campanhaId);
         if (!$campanha) $errors[] = "Campanha não encontrada.";
 
         if (!empty($errors)) {
@@ -271,7 +271,7 @@ class DoacaoController
             $this->pdo->beginTransaction();
 
             // cria doação
-            $doacaoId = $this->doacaoRepo->createDoacaoConfirmed([
+            $doacaoId = $this->doacaoRepository->createDoacaoConfirmed([
                 'valor' => $valor,
                 'empresa_id' => $empresaId,
                 'forma_pagamento' => $forma,

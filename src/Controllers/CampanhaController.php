@@ -10,13 +10,13 @@ use PDO;
 
 class CampanhaController
 {
-    private CampanhaRepository $repo;
+    private CampanhaRepository $campanhaRepository;
     private PDO $pdo;
 
     public function __construct()
     {
         $this->pdo = Database::getConnection();
-        $this->repo = new CampanhaRepository($this->pdo);
+        $this->campanhaRepository = new CampanhaRepository($this->pdo);
     }
 
     private function ensureOngOr403(): int
@@ -40,7 +40,7 @@ class CampanhaController
     public function index(): void
     {
         $ongId = $this->ensureOngOr403();
-        $campanhas = $this->repo->findByOng($ongId);
+        $campanhas = $this->campanhaRepository->findByOng($ongId);
         require_once __DIR__ . '/../Views/campanha/campanha.php';
     }
 
@@ -54,7 +54,7 @@ class CampanhaController
             exit();
         }
 
-        $campanha = $this->repo->findById($id);
+        $campanha = $this->campanhaRepository->findById($id);
         if (!$campanha || (int)$campanha['ong_id_ong'] !== $ongId) {
             http_response_code(403);
             echo "Campanha não encontrada ou sem permissão.";
@@ -75,7 +75,7 @@ class CampanhaController
             exit();
         }
 
-        $campanha = $this->repo->findById($id);
+        $campanha = $this->campanhaRepository->findById($id);
         if (!$campanha || (int)$campanha['ong_id_ong'] !== $ongId) {
             http_response_code(403);
             echo "Campanha não encontrada ou sem permissão.";
@@ -102,7 +102,7 @@ class CampanhaController
             exit();
         }
 
-        $campanha = $this->repo->findById($id);
+        $campanha = $this->campanhaRepository->findById($id);
         if (!$campanha || (int)$campanha['ong_id_ong'] !== $ongId) {
             http_response_code(403);
             echo "Campanha não encontrada ou sem permissão.";
@@ -128,7 +128,7 @@ class CampanhaController
             exit();
         }
 
-        $categoriaId = $this->repo->getCategoriaIdByKey($categoriaKey);
+        $categoriaId = $this->campanhaRepository->getCategoriaIdByKey($categoriaKey);
         if ($categoriaId === null) {
             $stmt = $this->pdo->prepare('INSERT INTO categoria (nome, descricao) VALUES (:nome, :descricao)');
             $stmt->execute([':nome' => $categoriaKey, ':descricao' => ucfirst($categoriaKey)]);
@@ -146,7 +146,7 @@ class CampanhaController
         ];
 
         try {
-            $ok = $this->repo->updateCampanha($id, $data);
+            $ok = $this->campanhaRepository->updateCampanha($id, $data);
             $_SESSION['success_message'] = $ok ? "Campanha atualizada com sucesso." : "Nenhuma alteração realizada.";
             header('Location: /?url=campanha');
             exit();
@@ -167,14 +167,14 @@ class CampanhaController
             exit();
         }
 
-        $campanha = $this->repo->findById($id);
+        $campanha = $this->campanhaRepository->findById($id);
         if (!$campanha || (int)$campanha['ong_id_ong'] !== $ongId) {
             http_response_code(403);
             echo "Campanha não encontrada ou sem permissão.";
             exit();
         }
 
-        $ok = $this->repo->closeCampanha($id);
+        $ok = $this->campanhaRepository->closeCampanha($id);
         $_SESSION['success_message'] = $ok ? "Campanha encerrada com sucesso." : "Falha ao encerrar campanha.";
         header('Location: /?url=campanha');
         exit();
@@ -234,7 +234,7 @@ class CampanhaController
         }
 
         // encontra categoria id
-        $categoriaId = $this->repo->getCategoriaIdByKey($categoriaKey);
+        $categoriaId = $this->campanhaRepository->getCategoriaIdByKey($categoriaKey);
         if ($categoriaId === null) {
             $stmt = $this->pdo->prepare('INSERT INTO categoria (nome, descricao) VALUES (:nome, :descricao)');
             $stmt->execute([':nome' => $categoriaKey, ':descricao' => ucfirst($categoriaKey)]);
@@ -263,7 +263,7 @@ class CampanhaController
         ];
 
         try {
-            $campanhaId = $this->repo->createCampanha($data);
+            $campanhaId = $this->campanhaRepository->createCampanha($data);
             $_SESSION['success_message'] = "Campanha criada com sucesso!";
             header('Location: /?url=campanha');
             exit();

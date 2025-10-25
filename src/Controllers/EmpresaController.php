@@ -7,11 +7,11 @@ use Repositories\EmpresaRepository;
 
 class EmpresaController
 {
-    private EmpresaRepository $repo;
+    private EmpresaRepository $empresaRepository;
 
     public function __construct()
     {
-        $this->repo = new EmpresaRepository(Database::getConnection());
+        $this->empresaRepository = new EmpresaRepository(Database::getConnection());
     }
 
     public function showCreateForm(?string $error = null): void
@@ -56,7 +56,7 @@ class EmpresaController
         }
 
         try {
-            $idOrg = $this->repo->createEmpresaWithUser($orgDados, $userDados);
+            $idOrg = $this->empresaRepository->createEmpresaWithUser($orgDados, $userDados);
 
             header('Location: /?url=login&created=1');
             exit();

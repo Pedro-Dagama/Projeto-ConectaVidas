@@ -14,6 +14,7 @@ use Controllers\RegisterController;
 use Controllers\EmpresaController;
 use Controllers\OngController;
 use Controllers\SobreController;
+use Controllers\CampanhaController;
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -39,6 +40,13 @@ $routes = [
     'admin' => [HomeController::class, 'admin'],
     'logged' => [HomeController::class, 'logged'],
     'register' => [RegisterController::class, 'showRegisterForm'],
+    // Campanha
+    'campanha' => [CampanhaController::class, 'index'],
+    'campanha/store' => [CampanhaController::class, 'store'],
+    'campanha/view' => [CampanhaController::class, 'view'],
+    'campanha/edit' => [CampanhaController::class, 'edit'],
+    'campanha/update' => [CampanhaController::class, 'update'],
+    'campanha/close' => [CampanhaController::class, 'close'],
 ];
 
 if (!array_key_exists($url, $routes)) {

@@ -4,14 +4,18 @@ namespace Controllers;
 
 use Config\Database;
 use Repositories\OngRepository;
+use Repositories\CampanhaRepository;
+use PDO;
 
 class OngController
 {
     private OngRepository $repo;
+    private PDO $pdo;
 
     public function __construct()
     {
-        $this->repo = new OngRepository(Database::getConnection());
+        $this->pdo = Database::getConnection();
+        $this->repo = new OngRepository($this->pdo);
     }
 
     public function showCreateForm(?string $error = null): void
@@ -103,7 +107,7 @@ class OngController
         return true;
     }
 
-    public function dashboard(): void
+    /*  public function dashboard(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -135,6 +139,38 @@ class OngController
             'campaigns' => $organizacao['campaigns'] ?? []
         ];
 
+        require_once __DIR__ . '/../Views/ong/dashboard.php';
+    } */
+
+    public function dashboard(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'ong') {
+            header('Location: /?url=login');
+            exit();
+        }
+
+        $idUsuario = (int)($_SESSION['user']['id_usuario']);
+        // recuperar id_ong parecido com getOngIdByUsuario
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("
+        SELECT o.id_ong
+        FROM usuario_organizacao uo
+        JOIN organizacao org ON org.id_organizacao = uo.organizacao_id_organizacao
+        JOIN ong o ON o.organizacao_id_organizacao = org.id_organizacao
+        WHERE uo.usuario_id_usuario = :usuarioId LIMIT 1
+    ");
+        $stmt->execute([':usuarioId' => $idUsuario]);
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ongId = $res ? (int)$res['id_ong'] : null;
+
+        $campanhas = [];
+        if ($ongId) {
+            $campRepo = new CampanhaRepository($pdo);
+            $campanhas = $campRepo->findByOng($ongId);
+        }
+
+        // possibilita $campanhas na view dashboard
         require_once __DIR__ . '/../Views/ong/dashboard.php';
     }
 }

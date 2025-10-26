@@ -18,20 +18,19 @@ main {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(255, 108, 2, 0.6) 40%,
-    rgba(255, 108, 2, 0.3) 70%,
-    rgba(255, 108, 2, 0) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(255, 108, 2, 0.6) 40%,
+      rgba(255, 108, 2, 0.3) 70%,
+      rgba(255, 108, 2, 0) 100%);
   backdrop-filter: blur(2.5px);
   z-index: 1;
 }
 
 .formulario-cadastro {
-  flex: 1;
+flex: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   background-color: #fff;
   position: relative;

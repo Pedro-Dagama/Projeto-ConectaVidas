@@ -28,155 +28,96 @@ class EmpresaController
             return;
         }
 
+        // monta arrays conforme formulário
         $orgDados = [
-            'cnpj' => $_POST['cnpj'] ?? '',
-            'razao_social' => trim($_POST['razao_social'] ?? ''),
-            'nome_fantasia' => trim($_POST['nome_fantasia'] ?? '')
+            'razao_social'   => trim($_POST['razao_social'] ?? ''),
+            'nome_fantasia'  => trim($_POST['nome_fantasia'] ?? ''),
+            'cnpj'           => trim($_POST['cnpj'] ?? ''),
+            'cep'            => trim($_POST['cep'] ?? ''),
+            'endereco'       => trim($_POST['endereco'] ?? ''),
+            'numero'         => trim($_POST['numero'] ?? ''),
+            'cidade'         => trim($_POST['cidade'] ?? ''),
+            'estado'         => trim($_POST['estado'] ?? '')
         ];
 
         $userDados = [
-            'nome' => trim($_POST['responsavel_nome'] ?? ''),
-            'email' => trim($_POST['responsavel_email'] ?? ''),
-            'senha_plain' => $_POST['responsavel_senha'] ?? '',
-            'telefone' => trim($_POST['telefone'] ?? ''),
-            'endereco' => trim($_POST['endereco'] ?? '')
+            'nome'     => trim($_POST['nome'] ?? ''),
+            'email'    => trim($_POST['email'] ?? ''),
+            'senha'    => $_POST['senha'] ?? '',
+            'telefone' => trim($_POST['telefone'] ?? '')
         ];
 
-        if ($orgDados['cnpj'] === '' || $userDados['nome'] === '' || $userDados['email'] === '' || $userDados['senha_plain'] === '') {
+        // validações mínimas
+        $requiredOrg = [$orgDados['cnpj'], $orgDados['razao_social'], $orgDados['cep']];
+        $requiredUser = [$userDados['nome'], $userDados['email'], $userDados['senha']];
+
+        if (in_array('', $requiredOrg, true) || in_array('', $requiredUser, true)) {
             $this->showCreateForm("Preencha todos os campos obrigatórios.");
             return;
         }
 
         if (!filter_var($userDados['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->showCreateForm("E-mail do responsável inválido.");
+            $this->showCreateForm("E-mail inválido.");
             return;
         }
 
-        if ($userDados['senha_plain'] !== ($_POST['responsavel_confirmar_senha'] ?? '')) {
+        // senha confirm
+        $senhaConfirm = $_POST['nova_senha'] ?? '';
+        if ($userDados['senha'] !== $senhaConfirm) {
             $this->showCreateForm("As senhas não conferem.");
             return;
         }
 
+        // Tenta criar
         try {
             $idOrg = $this->empresaRepository->createEmpresaWithUser($orgDados, $userDados);
 
+            // criação ok — redireciona para login
             header('Location: /?url=login&created=1');
             exit();
         } catch (\Throwable $e) {
+            error_log("EmpresaController::store - erro: " . $e->getMessage());
             $this->showCreateForm($e->getMessage());
         }
     }
-
-    /* public function dashboard(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        if (empty($_SESSION['user'])) {
-            header('Location: /?url=login');
-            exit();
-        }
-
-        $idUsuario = (int)($_SESSION['user']['id_usuario'] ?? 0);
-        if ($idUsuario <= 0) {
-            header('Location: /?url=login');
-            exit();
-        }
-
-        $organizacao = $this->repo->getOrganizacaoByUsuario($idUsuario);
-        if (!$organizacao) {
-            $error = "Nenhuma organização vinculada ao seu usuário.";
-            require_once __DIR__ . '/../Views/empresa/sem_organizacao.php';
-            return;
-        }
-
-        $empresa = $this->repo->getEmpresaByOrganizacao((int)$organizacao['id_organizacao']);
-
-        require_once __DIR__ . '/../Views/empresa/dashboard.php';
-    } */
-    /*     public function dashboard(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-
-        // proteção: redireciona se não for empresa
-        if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'empresa') {
-            header('Location: /?url=login');
-            exit();
-        }
-
-        $campRepo = new \Repositories\CampanhaRepository(\Config\Database::getConnection());
-        $campanhasAtivas = $campRepo->findActiveCampaigns();
-
-        // passe $campanhasAtivas para a view
-        require_once __DIR__ . '/../Views/empresa/dashboard.php';
-    } */
 
     public function dashboard(): void
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
 
-        // proteção simples por tipo
         if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'empresa') {
             header('Location: /?url=login');
             exit();
         }
 
-        // tentar extrair o id do usuário por várias chaves comuns
-        $user = $_SESSION['user'] ?? [];
-        $possibleKeys = ['id_usuario', 'id', 'usuario_id', 'idUser', 'user_id'];
-        $userId = 0;
-        foreach ($possibleKeys as $k) {
-            if (!empty($user[$k]) && is_numeric($user[$k])) {
-                $userId = (int)$user[$k];
-                break;
-            }
-        }
-
-        // log para debug (remova depois)
-        error_log("EmpresaController::dashboard - user session keys: " . json_encode(array_keys($user)));
-        error_log("EmpresaController::dashboard - resolved userId={$userId}");
-
+        $userId = (int)($_SESSION['user']['id_usuario'] ?? 0);
         if ($userId <= 0) {
-            // fallback: talvez a sessão já contenha organizacao/empresa diretamente
-            if (!empty($user['organizacao_id']) || !empty($user['organizacao'])) {
-                // tente usar dados da sessão (se existirem)
-                // (aqui tentamos popular $organizacao/$empresa para não quebrar a view)
-                $organizacao = $user['organizacao'] ?? ['id_organizacao' => (int)($user['organizacao_id'] ?? 0)];
-            } else {
-                // não temos id de usuário nem organização: volta pro login
-                error_log("EmpresaController::dashboard - nenhum userId ou organização encontrado na sessão, redirecionando para login.");
-                header('Location: /?url=login');
-                exit();
-            }
-        } else {
-            // pega organizacao via repository
-            $organizacao = $this->empresaRepository->getOrganizacaoByUsuario($userId);
-            if (!$organizacao) {
-                // sem organização vinculada
-                require_once __DIR__ . '/../Views/empresa/sem_organizacao.php';
-                return;
-            }
+            header('Location: /?url=login');
+            exit();
         }
 
-        // pega empresa a partir da organização (se possível)
-        $empresa = $this->empresaRepository->getEmpresaByOrganizacao((int)($organizacao['id_organizacao'] ?? 0));
-        $empresaId = (int)($empresa['id_empresa'] ?? 0);
+        $organizacao = $this->empresaRepository->getOrganizacaoByUsuario($userId);
+        if (!$organizacao) {
+            require_once __DIR__ . '/../Views/empresa/sem_organizacao.php';
+            return;
+        }
 
-        // campanhas ativas
-        $campRepo = new CampanhaRepository(Database::getConnection());
-        $campanhasAtivas = $campRepo->findActiveCampaigns();
+        $empresa = $this->empresaRepository->getEmpresaByOrganizacao((int)$organizacao['id_organizacao']);
 
-        // histórico de doações (se tivermos empresaId)
+        $campanhaRepository = new CampanhaRepository(Database::getConnection());
+        $campanhasAtivas = $campanhaRepository->findActiveCampaigns();
+
         $historicoDoacoes = [];
-        if ($empresaId > 0) {
-            $doacoesRepo = new DoacaoRepository(Database::getConnection());
+        if (!empty($empresa['id_empresa'])) {
+            $doacaoRepository = new DoacaoRepository(Database::getConnection());
             try {
-                $historicoDoacoes = $doacoesRepo->getHistoricoPorEmpresa($empresaId);
+                $historicoDoacoes = $doacaoRepository->getHistoricoPorEmpresa((int)$empresa['id_empresa']);
             } catch (\Throwable $e) {
                 error_log("EmpresaController::dashboard - erro ao buscar historicoDoacoes: " . $e->getMessage());
                 $historicoDoacoes = [];
             }
         }
 
-        // inclui a view (ela espera $organizacao, $empresa, $campanhasAtivas, $historicoDoacoes)
         require_once __DIR__ . '/../Views/empresa/dashboard.php';
     }
 }

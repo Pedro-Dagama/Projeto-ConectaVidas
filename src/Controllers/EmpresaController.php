@@ -81,6 +81,46 @@ class EmpresaController
         }
     }
 
+    /* public function dashboard(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+
+        if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'empresa') {
+            header('Location: /?url=login');
+            exit();
+        }
+
+        $userId = (int)($_SESSION['user']['id_usuario'] ?? 0);
+        if ($userId <= 0) {
+            header('Location: /?url=login');
+            exit();
+        }
+
+        $organizacao = $this->empresaRepository->getOrganizacaoByUsuario($userId);
+        if (!$organizacao) {
+            require_once __DIR__ . '/../Views/empresa/sem_organizacao.php';
+            return;
+        }
+
+        $empresa = $this->empresaRepository->getEmpresaByOrganizacao((int)$organizacao['id_organizacao']);
+
+        $campanhaRepository = new CampanhaRepository(Database::getConnection());
+        $campanhasAtivas = $campanhaRepository->findActiveCampaigns();
+
+        $historicoDoacoes = [];
+        if (!empty($empresa['id_empresa'])) {
+            $doacaoRepository = new DoacaoRepository(Database::getConnection());
+            try {
+                $historicoDoacoes = $doacaoRepository->getHistoricoPorEmpresa((int)$empresa['id_empresa']);
+            } catch (\Throwable $e) {
+                error_log("EmpresaController::dashboard - erro ao buscar historicoDoacoes: " . $e->getMessage());
+                $historicoDoacoes = [];
+            }
+        }
+
+        require_once __DIR__ . '/../Views/empresa/dashboard.php';
+    } */
+
     public function dashboard(): void
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -94,6 +134,30 @@ class EmpresaController
         if ($userId <= 0) {
             header('Location: /?url=login');
             exit();
+        }
+
+        try {
+            $pdo = \Config\Database::getConnection();
+            $stmt = $pdo->prepare('SELECT telefone, endereco FROM usuario WHERE id_usuario = :id LIMIT 1');
+            $stmt->execute([':id' => $userId]);
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            if ($row) {
+                if (session_status() === PHP_SESSION_NONE) session_start();
+
+                if (!empty($row['telefone'])) {
+                    $_SESSION['user']['telefone'] = $row['telefone'];
+                } elseif (!isset($_SESSION['user']['telefone'])) {
+                    $_SESSION['user']['telefone'] = null;
+                }
+
+                if (!empty($row['endereco'])) {
+                    $_SESSION['user']['endereco'] = $row['endereco'];
+                } elseif (!isset($_SESSION['user']['endereco'])) {
+                    $_SESSION['user']['endereco'] = null;
+                }
+            }
+        } catch (\Throwable $e) {
+            error_log("EmpresaController::dashboard - erro ao obter telefone/endereco do usuário: " . $e->getMessage());
         }
 
         $organizacao = $this->empresaRepository->getOrganizacaoByUsuario($userId);

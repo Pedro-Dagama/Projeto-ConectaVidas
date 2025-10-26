@@ -74,29 +74,36 @@ class OngController
     {
         if ($idUsuario <= 0) return false;
 
+        // tenta pegar organizacao (já existente)
         $organizacao = $this->repo->getOrganizacaoByUsuario($idUsuario);
         if (!$organizacao) {
             return false;
         }
 
-        $ong = $this->repo->getOngByOrganizacao((int)$organizacao['id_organizacao']);
+        // pega dados da tabela ong (pode retornar null se não houver)
+        $ongRow = $this->repo->getOngByOrganizacao((int)$organizacao['id_organizacao']);
 
+        // montar array unificado com prioridade para campos da tabela ong quando fizer sentido
         $sessionOng = [
-            'id_organizacao'   => $organizacao['id_organizacao'] ?? null,
-            'cnpj'             => $organizacao['cnpj'] ?? ($ong['cnpj'] ?? null),
-            'razao_social'     => $organizacao['razao_social'] ?? ($ong['razao_social'] ?? null),
-            'nome_fantasia'    => $ong['nome_fantasia'] ?? $organizacao['razao_social'] ?? null,
-            'telefone'         => $organizacao['telefone'] ?? ($ong['telefone'] ?? null),
-            'endereco'         => $organizacao['endereco'] ?? ($ong['endereco'] ?? null),
-            'email'            => $organizacao['email'] ?? ($ong['email'] ?? null),
-            'descricao'        => $organizacao['descricao'] ?? ($ong['descricao'] ?? null),
-            'logo'             => $ong['logo'] ?? ($organizacao['logo'] ?? null),
-            'area_atuacao'     => $ong['area_atuacao'] ?? ($organizacao['area_atuacao'] ?? null),
-
-            // mock
-            'active_campaigns' => $ong['active_campaigns'] ?? 0,
-            'impact_value'     => $ong['impact_value'] ?? 'R$ 0,00',
-            'campaigns'        => $ong['campaigns'] ?? [],
+            'id_organizacao'    => isset($organizacao['id_organizacao']) ? (int)$organizacao['id_organizacao'] : null,
+            'id_ong'            => isset($ongRow['id_ong']) ? (int)$ongRow['id_ong'] : null,
+            'cnpj'              => $organizacao['cnpj'] ?? null,
+            'razao_social'      => $organizacao['razao_social'] ?? null,
+            'nome_fantasia'     => $ongRow['nome_fantasia'] ?? $organizacao['razao_social'] ?? null,
+            'telefone'          => $organizacao['telefone'] ?? $ongRow['telefone'] ?? null,
+            'email'             => $organizacao['email'] ?? $ongRow['email'] ?? null,
+            'cep'               => $organizacao['cep'] ?? null,
+            'endereco'          => $organizacao['endereco'] ?? $ongRow['endereco'] ?? null,
+            'numero'            => $organizacao['numero'] ?? $ongRow['numero'] ?? null,
+            'cidade'            => $organizacao['cidade'] ?? $ongRow['cidade'] ?? null,
+            'estado'            => $organizacao['estado'] ?? $ongRow['estado'] ?? null,
+            'descricao'         => $ongRow['descricao'] ?? $organizacao['descricao'] ?? null,
+            'logo'              => $ongRow['logo'] ?? $organizacao['logo'] ?? null,
+            'area_atuacao'      => $ongRow['area_atuacao'] ?? $organizacao['area_atuacao'] ?? null,
+            // campos extras para a view (pode calcular dinamicamente)
+            'active_campaigns'  => 0,
+            'impact_value'      => 'R$ 0,00',
+            'campaigns'         => [],
         ];
 
         if (session_status() === PHP_SESSION_NONE) {
@@ -142,7 +149,7 @@ class OngController
         require_once __DIR__ . '/../Views/ong/dashboard.php';
     } */
 
-    public function dashboard(): void
+    /* public function dashboard(): void
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'ong') {
@@ -172,5 +179,108 @@ class OngController
 
         // possibilita $campanhas na view dashboard
         require_once __DIR__ . '/../Views/ong/dashboard.php';
+    } */
+    /* public function dashboard(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'ong') {
+            header('Location: /?url=login');
+            exit();
+        }
+
+        $user = $_SESSION['user'] ?? null;
+        $idUsuario = (int)($user['id_usuario'] ?? 0);
+        if ($idUsuario <= 0) {
+            header('Location: /?url=login');
+            exit();
+        }
+
+        // carrega sessão com dados reais se ainda não tiver
+        if (empty($_SESSION['ong']) || empty($_SESSION['ong']['id_organizacao'])) {
+            $this->loadSessionForUser($idUsuario);
+        }
+
+        $ong = $_SESSION['ong'] ?? null;
+
+        // recuperar id_ong (se preciso)
+        $ongId = $ong['id_ong'] ?? null;
+
+        $campanhas = [];
+        if ($ongId) {
+            $pdo = Database::getConnection();
+            $campRepo = new CampanhaRepository($pdo);
+            $campanhas = $campRepo->findByOng($ongId);
+        }
+
+        // passa $ong e $campanhas à view
+        require_once __DIR__ . '/../Views/ong/dashboard.php';
+    } */
+   public function dashboard(): void
+{
+    if (session_status() === PHP_SESSION_NONE) session_start();
+
+    // proteção por tipo
+    if (!isset($_SESSION['user']) || ($_SESSION['user']['tipo_usuario'] ?? '') !== 'ong') {
+        header('Location: /?url=login');
+        exit();
     }
+
+    $user = $_SESSION['user'] ?? [];
+    $idUsuario = (int)($user['id_usuario'] ?? 0);
+    $userEmail = $user['email'] ?? null;
+
+    if ($idUsuario <= 0) {
+        header('Location: /?url=login');
+        exit();
+    }
+
+    // buscar organizacao + ong do banco
+    $organizacao = $this->repo->getOrganizacaoByUsuario($idUsuario);
+    if (!$organizacao) {
+        // sem organização vinculada
+        require_once __DIR__ . '/../Views/ong/sem_organizacao.php';
+        return;
+    }
+
+    $ongRow = $this->repo->getOngByOrganizacao((int)$organizacao['id_organizacao']);
+
+    // 🔹 buscar telefone do usuário direto da tabela usuario
+    $pdo = Database::getConnection();
+    $stmt = $pdo->prepare("SELECT telefone FROM usuario WHERE id_usuario = :id");
+    $stmt->execute([':id' => $idUsuario]);
+    $telefoneUsuario = $stmt->fetchColumn();
+
+    // montar array $ong com prioridade para campos da tabela ong quando apropriado
+    $ong = [
+        'id_organizacao' => isset($organizacao['id_organizacao']) ? (int)$organizacao['id_organizacao'] : null,
+        'id_ong'         => isset($ongRow['id_ong']) ? (int)$ongRow['id_ong'] : null,
+        'cnpj'           => $organizacao['cnpj'] ?? null,
+        'razao_social'   => $organizacao['razao_social'] ?? null,
+        'nome_fantasia'  => $ongRow['nome_fantasia'] ?? $organizacao['razao_social'] ?? null,
+        'email'          => $userEmail ?? $organizacao['email'] ?? ($ongRow['email'] ?? null),
+        'telefone'       => $telefoneUsuario ?? null,
+        'cep'            => $organizacao['cep'] ?? null,
+        'endereco'       => $organizacao['endereco'] ?? ($ongRow['endereco'] ?? null),
+        'numero'         => $organizacao['numero'] ?? ($ongRow['numero'] ?? null),
+        'cidade'         => $organizacao['cidade'] ?? ($ongRow['cidade'] ?? null),
+        'estado'         => $organizacao['estado'] ?? ($ongRow['estado'] ?? null),
+        'descricao'      => $ongRow['descricao'] ?? $organizacao['descricao'] ?? null,
+        'logo'           => $ongRow['logo'] ?? $organizacao['logo'] ?? null,
+        'area_atuacao'   => $ongRow['area_atuacao'] ?? $organizacao['area_atuacao'] ?? null,
+    ];
+
+    // opcional: salvar em sessão para uso posterior
+    $_SESSION['ong'] = $ong;
+
+    // carregar campanhas da ong (se houver id_ong)
+    $campanhas = [];
+    if (!empty($ong['id_ong'])) {
+        $pdo = Database::getConnection();
+        $campRepo = new CampanhaRepository($pdo);
+        $campanhas = $campRepo->findByOng((int)$ong['id_ong']);
+    }
+
+    // passa $ong e $campanhas para a view
+    require_once __DIR__ . '/../Views/ong/dashboard.php';
+}
 }

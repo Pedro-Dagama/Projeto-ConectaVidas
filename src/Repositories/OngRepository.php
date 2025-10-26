@@ -40,21 +40,28 @@ class OngRepository
         try {
             $this->pdo->beginTransaction();
 
+            // o campo `cep` no schema é NOT NULL — se o formulário não enviar,
+            // string vazia '' para satisfazer a restrição.
             $stmtOrg = $this->pdo->prepare('
-                INSERT INTO organizacao (tipo, cnpj, razao_social, data_criacao)
-                VALUES (:tipo, :cnpj, :razao_social, NOW())
-            ');
+            INSERT INTO organizacao (tipo, cnpj, razao_social, cep, endereco, numero, cidade, estado, data_criacao)
+            VALUES (:tipo, :cnpj, :razao_social, :cep, :endereco, :numero, :cidade, :estado, NOW())
+        ');
             $stmtOrg->execute([
                 ':tipo' => 'ong',
                 ':cnpj' => $cnpj !== '' ? $cnpj : null,
-                ':razao_social' => $orgDados['razao_social'] ?? null
+                ':razao_social' => $orgDados['razao_social'] ?? null,
+                ':cep' => $orgDados['cep'] ?? '',           // <<--- aqui
+                ':endereco' => $orgDados['endereco'] ?? null,
+                ':numero' => $orgDados['numero'] ?? null,
+                ':cidade' => $orgDados['cidade'] ?? null,
+                ':estado' => $orgDados['estado'] ?? null,
             ]);
             $idOrg = (int)$this->pdo->lastInsertId();
 
             $stmtOng = $this->pdo->prepare('
-                INSERT INTO ong (organizacao_id_organizacao, area_atuacao)
-                VALUES (:id_org, :area_atuacao)
-            ');
+            INSERT INTO ong (organizacao_id_organizacao, area_atuacao)
+            VALUES (:id_org, :area_atuacao)
+        ');
             $stmtOng->execute([
                 ':id_org' => $idOrg,
                 ':area_atuacao' => $orgDados['area_atuacao'] ?? null
@@ -68,9 +75,9 @@ class OngRepository
             $senhaHash = password_hash($senhaPlain, PASSWORD_DEFAULT);
 
             $stmtUsr = $this->pdo->prepare('
-                INSERT INTO usuario (nome, email, senha, telefone, endereco, tipo_usuario, status, data_cadastro)
-                VALUES (:nome, :email, :senha, :telefone, :endereco, :tipo_usuario, :status, NOW())
-            ');
+            INSERT INTO usuario (nome, email, senha, telefone, endereco, tipo_usuario, status, data_cadastro)
+            VALUES (:nome, :email, :senha, :telefone, :endereco, :tipo_usuario, :status, NOW())
+        ');
             $stmtUsr->execute([
                 ':nome' => $userDados['nome'],
                 ':email' => $userDados['email'],
@@ -83,9 +90,9 @@ class OngRepository
             $idUsuario = (int)$this->pdo->lastInsertId();
 
             $stmtLink = $this->pdo->prepare('
-                INSERT INTO usuario_organizacao (usuario_id_usuario, organizacao_id_organizacao)
-                VALUES (:id_usuario, :id_org)
-            ');
+            INSERT INTO usuario_organizacao (usuario_id_usuario, organizacao_id_organizacao)
+            VALUES (:id_usuario, :id_org)
+        ');
             $stmtLink->execute([
                 ':id_usuario' => $idUsuario,
                 ':id_org' => $idOrg
@@ -98,7 +105,6 @@ class OngRepository
             throw $e;
         }
     }
-
 
     public function getOrganizacaoByUsuario(int $idUsuario): ?array
     {
@@ -121,4 +127,20 @@ class OngRepository
         $ong = $stmt->fetch(PDO::FETCH_ASSOC);
         return $ong ?: null;
     }
+
+    public function findOrganizacaoWithOngByUsuario(int $idUsuario): ?array
+{
+    $sql = "
+        SELECT org.*, o.id_ong, o.area_atuacao, o.nome_fantasia, o.logo
+        FROM usuario_organizacao uo
+        JOIN organizacao org ON org.id_organizacao = uo.organizacao_id_organizacao
+        LEFT JOIN ong o ON o.organizacao_id_organizacao = org.id_organizacao
+        WHERE uo.usuario_id_usuario = :usuarioId
+        LIMIT 1
+    ";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([':usuarioId' => $idUsuario]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ?: null;
+}
 }

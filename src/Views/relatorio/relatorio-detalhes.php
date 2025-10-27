@@ -1,19 +1,62 @@
 <?php
-
 session_start();
 
 require_once __DIR__ . '/../../../src/Config/Database.php';
 
 use Config\Database;
 
+// ✅ Conexão única — não precisa reconectar mais tarde
 try {
-    // Estabelece conexão com o banco de dados
     $pdo = Database::getConnection();
+} catch (PDOException $e) {
+    die("<p class='text-center text-danger mt-5'>Erro de conexão: " . htmlspecialchars($e->getMessage()) . "</p>");
+}
 
-    // Obtém o ID da campanha via GET
-    $idCampanha = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?? 3;
+// ====== Carregar campanhas relacionadas à ONG do usuário ======
+$campanhas = [];
 
-    // QUERY 1: Busca dados da campanha e suas relações
+try {
+    // 1) Se há ONG na sessão
+    if (!empty($_SESSION['ong']['id_ong'] = 2)) {
+        $ongId = (int) $_SESSION['ong']['id_ong'];
+
+        $stmt = $pdo->prepare("
+            SELECT id_campanha, titulo
+            FROM campanha
+            WHERE ong_id_ong = ?
+            ORDER BY data_criacao DESC
+        ");
+        $stmt->execute([$ongId]);
+        $campanhas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // 2) Se há usuário logado, buscar campanhas pelas ONGs ligadas a ele
+    } elseif (!empty($_SESSION['user']['id_usuario'])) {
+        $userId = (int) $_SESSION['user']['id_usuario'];
+
+        $stmt = $pdo->prepare("
+            SELECT DISTINCT c.id_campanha, c.titulo
+            FROM campanha c
+            JOIN ong o ON c.ong_id_ong = o.id_ong
+            JOIN organizacao org ON o.organizacao_id_organizacao = org.id_organizacao
+            JOIN usuario_organizacao uo ON uo.organizacao_id_organizacao = org.id_organizacao
+            WHERE uo.usuario_id_usuario = ?
+            ORDER BY c.data_criacao DESC
+        ");
+        $stmt->execute([$userId]);
+        $campanhas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 3) Nenhuma campanha encontrada
+    if (empty($campanhas)) {
+        die("<p class='text-center text-danger mt-5'>Nenhuma campanha disponível para gerar relatório.</p>");
+    }
+
+    // ✅ Usa o ID via GET ou, se não houver, a primeira campanha da lista
+    $idCampanha = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?: (int)$campanhas[0]['id_campanha'];
+
+    // === CONSULTAS PRINCIPAIS ===
+
+    // 1️⃣ Dados da campanha
     $stmtCampanha = $pdo->prepare("
         SELECT 
             c.id_campanha,
@@ -38,27 +81,26 @@ try {
         LIMIT 1
     ");
     $stmtCampanha->execute([$idCampanha]);
-    $campanha = $stmtCampanha->fetch();
+    $campanha = $stmtCampanha->fetch(PDO::FETCH_ASSOC);
 
-    // Verifica se a campanha existe
     if (!$campanha) {
         throw new Exception("Campanha não encontrada.");
     }
 
-    // QUERY 2: Busca estatísticas das doações
+    // 2️⃣ Estatísticas das doações
     $stmtStats = $pdo->prepare("
         SELECT 
-            IFNULL(SUM(valor),0) as total_arrecadado, 
-            COUNT(*) as total_doacoes, 
-            IFNULL(AVG(valor),0) as media_doacao 
-        FROM doacao 
-        WHERE campanha_id_campanha = ? 
+            IFNULL(SUM(valor), 0) AS total_arrecadado,
+            COUNT(*) AS total_doacoes,
+            IFNULL(AVG(valor), 0) AS media_doacao
+        FROM doacao
+        WHERE campanha_id_campanha = ?
         AND status = 'confirmado'
     ");
     $stmtStats->execute([$idCampanha]);
-    $stats = $stmtStats->fetch();
+    $stats = $stmtStats->fetch(PDO::FETCH_ASSOC);
 
-    // QUERY 3: Busca lista de doadores
+    // 3️⃣ Lista de doadores
     $stmtDoadores = $pdo->prepare("
         SELECT 
             e.nome_fantasia AS nome,
@@ -67,33 +109,32 @@ try {
             d.forma_pagamento AS metodo
         FROM doacao d
         INNER JOIN empresa e ON d.empresa_id_empresa = e.id_empresa
-        WHERE d.campanha_id_campanha = ? 
+        WHERE d.campanha_id_campanha = ?
         AND d.status = 'confirmado'
         ORDER BY d.valor DESC
     ");
     $stmtDoadores->execute([$idCampanha]);
-    $doadores = $stmtDoadores->fetchAll();
+    $doadores = $stmtDoadores->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
-    // Em caso de erro, exibe mensagem amigável
-    die("<p class='text-center text-danger mt-5'>Erro: " . $e->getMessage() . "</p>");
+    // ⚠️ Sempre escapar mensagens de erro
+    die("<p class='text-center text-danger mt-5'>Erro: " . htmlspecialchars($e->getMessage()) . "</p>");
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR" data-bs-theme="light">
 
 <head>
-    <!-- Meta tags e títulos -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Relatório - ConectaVidas+</title>
 
-    <!-- CSS: Bootstrap e ícones -->
+    <!-- Bootstrap e ícones -->
+    <link rel="stylesheet" href="../../../public/css/global.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
-    <!-- CSS Customizado -->
     <style>
-    
         .card-body canvas {
             min-height: 250px;
             max-height: 350px;
@@ -101,19 +142,16 @@ try {
             height: auto !important;
         }
 
-       
-        .transition-shadow:hover {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2) !important;
-            transform: translateY(-2px);
-            transition: all 0.2s ease-in-out;
-        }
-
         .transition-shadow {
             transition: all 0.2s ease-in-out;
         }
+
+        .transition-shadow:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2) !important;
+            transform: translateY(-2px);
+        }
     </style>
 
-    <!-- Scripts necessários -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -121,127 +159,179 @@ try {
 </head>
 
 <body class="bg-body text-body" style="min-height: 100vh; display: flex; flex-direction: column;">
-    <!-- Header -->
-    <header class="main-header">
-        <!-- Desktop -->
-        <div
-            class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
-            <div class="d-flex align-items-center me-4">
-                <a href="#" class="text-decoration-none text-body">
-                    <span class="fw-bold fs-1">ConectaVidas+</span>
-                </a>
-            </div>
-            <div class="d-flex align-items-center gap-4 ms-auto">
-                <button
-                    class="theme-toggle btn btn-outline-secondary fs-5"
-                    title="Alternar Tema">
-                    <i class="bi bi-moon-fill"></i>
-                </button>
-                <div class="dropdown menu-user p-2">
-                    <a
-                        href="#"
-                        class="d-flex align-items-center text-decoration-none dropdown-toggle text-body"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <span class="me-2 fw-bold fs-5">Instituto Esperança</span>
-                        <img
-                            src="https://picsum.photos/100"
-                            alt="avatar"
-                            width="40"
-                            height="40"
-                            class="rounded-circle" />
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end fs-5">
-                        <li><a class="dropdown-item" href="../">Nova campanha</a></li>
-                        <li><a class="dropdown-item" href="#">Configurações</a></li>
-                        <li><a class="dropdown-item" href="#">Perfil</a></li>
-                        <li><a class="dropdown-item" href="#">Relatórios</a></li>
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-                        <li><a class="dropdown-item" href="#">Sair</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+     <div class="container">
 
-        <!-- Mobile -->
-        <nav
-            class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold fs-3" href="#">ConectaVidas+</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarMobile"
-                    aria-controls="navbarMobile"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarMobile">
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Botão de Tema no Mobile -->
-                        <li class="nav-item mt-2">
-                            <button
-                                class="theme-toggle btn btn-outline-secondary w-100"
-                                title="Alternar Tema">
-                                <i class="bi bi-moon-fill"></i> Modo
-                            </button>
-                        </li>
-                        <li><a class="nav-link" href="#">Nova campanha</a></li>
-                        <li><a class="nav-link" href="#">Configurações</a></li>
-                        <li><a class="nav-link" href="#">Perfil</a></li>
-                        <li><a class="nav-link" href="#">Relatórios</a></li>
-                        <li><a class="nav-link text-danger" href="#">Sair</a></li>
-                    </ul>
-                </div>
+        <!-- HEADER DESKTOP -->
+        <header class="main-header">
+            <div class="d-none d-md-flex container-fluid justify-content-between align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
+                <a href="#" class="text-decoration-none text-body">
+                    <span style="color:var(--primary);" class="fw-bold fs-1">ConectaVidas+</span>
+                </a>
+
+                <nav class="d-flex align-items-center gap-4">
+                    <a href="#explorar" class="text-body text-decoration-none fw-semibold fs-5">Inicio</a>
+                    <a href="#sobre" class="text-body text-decoration-none fw-semibold fs-5">Campanhas</a>
+                    <a href="#como" class="text-body text-decoration-none fw-semibold fs-5">Empresas</a>
+
+                    <button class="theme-toggle btn btn-outline-secondary fs-5" title="Alternar Tema" type="button">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+
+                    <div class="dropdown" data-bs-theme="light">
+                        <a href="#" class="btn btn-outline-primary dropdown-toggle fw-semibold fs-5" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                            <span class="me-2 fw-bold fs-5" id="navOngNameText">
+                                <?= htmlspecialchars($ong['nome_fantasia'] ?? 'Nome da ONG') ?>
+                            </span>
+                            <i></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end fs-5">
+                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Configurações</a></li>
+                            <li><a class="dropdown-item" href="#">Relatórios</a></li>
+                             <li><a class="dropdown-item" href="#">Historico</a></li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="#">Sair</a></li>
+                        </ul>
+                    </div>
+                </nav>
             </div>
-        </nav>
-    </header>
+
+            <!-- HEADER MOBILE -->
+            <nav class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none">
+                <div class="container-fluid">
+                    <a style="color:var(--primary);" class="navbar-brand fw-bold fs-3" href="#">ConectaVidas+</a>
+                    
+                  
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- Ícone Home -->
+                        <a href="/" class="btn btn-link text-body px-2">
+                            <i class="bi bi-house-door fs-4"></i>
+                        </a>
+                        
+                        <button
+                            class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarMobile"
+                            aria-controls="navbarMobile"
+                            aria-expanded="false"
+                            aria-label="Alternar navegação">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="navbarMobile">
+                        <ul class="navbar-nav ms-auto text-center">
+                            <!-- Botão de Tema no Mobile -->
+                            <li class="nav-item mt-2">
+                                <button
+                                    class="theme-toggle btn btn-outline-secondary w-100"
+                                    title="Alternar Tema"
+                                    type="button">
+                                    <i class="bi bi-moon-fill"></i> Modo
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Perfil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Configurações</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Relatórios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Histórico</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-danger" href="#">Sair</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    </div>
 
     <main class="container my-5 pt-5 flex-grow-1">
-        <h1 class="fw-bolder mt-5 mb-4 text-center text-secondary">Relatório da Campanha</h1>
+    <h1 class="fw-bolder mt-5 mb-4 text-center text-secondary">Relatório da Campanha</h1>
 
-        <!-- Bloco de Métricas (Dashboard Style) -->
-        <div class="mb-5">
-            <h2 class="h3 fw-bold mb-4 border-bottom pb-2 text-primary">Resumo das Doações</h2>
-            <div class="row g-4 mb-4">
-                <!-- Card 1: Total Arrecadado -->
-                <div class="col-12 col-md-4">
-                    <div class="card shadow border-start border-5 border-success h-100 transition-shadow">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="text-uppercase text-muted small mb-1">Total Arrecadado</p>
-                                    <h3 class="fw-bolder mb-0 text-success">
-                                        R$ <?php echo number_format($stats['total_arrecadado'], 2, ',', '.'); ?>
-                                    </h3>
-                                </div>
-                                <i class="bi bi-currency-dollar display-6 text-success opacity-75"></i>
+    <!-- Escolher campanha -->
+    <form method="get" class="mb-5 d-flex flex-column align-items-center">
+        <div class="text-center mb-3">
+            <h5 class="fw-semibold text-secondary mb-1">Escolha a campanha que deseja visualizar</h5>
+            <p class="text-muted mb-0">Selecione uma campanha abaixo para gerar o relatório correspondente.</p>
+        </div>
+
+        <div class="d-flex justify-content-center" style="min-width:300px;">
+            <label for="campanhaSelect" class="form-label visually-hidden">Escolher Campanha</label>
+            <select id="campanhaSelect" name="id" class="form-select shadow-sm" onchange="this.form.submit()">
+                <?php foreach ($campanhas as $c): ?>
+                    <option value="<?= (int)$c['id_campanha']; ?>" <?= ((int)$c['id_campanha'] === (int)$idCampanha) ? 'selected' : ''; ?>>
+                        <?= htmlspecialchars($c['titulo']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <noscript>
+            <button type="submit" class="btn btn-primary mt-3">Carregar</button>
+        </noscript>
+    </form>
+
+    <!-- Métricas  -->
+    <div class="mb-5">
+    
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3 text-center text-md-start">
+            <h2 class="h3 fw-bold border-bottom pb-2 text-primary mb-0 w-100 w-md-auto">
+                Resumo das Doações
+            </h2>
+
+            <!-- Botão Voltar ao Painel -->
+            <a href="#" class="btn btn-outline-secondary shadow-sm d-inline-flex align-items-center">
+                <i class="bi bi-arrow-left me-2 fs-5"></i> Voltar ao Painel
+            </a>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <!-- Card 1: Total Arrecadado -->
+            <div class="col-12 col-md-4">
+                <div class="card shadow border-start border-5 border-success h-100 transition-shadow">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <p class="text-uppercase text-muted small mb-1">Total Arrecadado</p>
+                                <h3 class="fw-bolder mb-0 text-success">
+                                    R$ <?php echo number_format($stats['total_arrecadado'], 2, ',', '.'); ?>
+                                </h3>
                             </div>
-                            <p class="mt-3 text-muted small mb-0">Valor total de todas as doações monetárias.</p>
+                            <i class="bi bi-currency-dollar display-6 text-success opacity-75"></i>
                         </div>
+                        <p class="mt-3 text-muted small mb-0">Valor total de todas as doações monetárias.</p>
                     </div>
                 </div>
-                <!-- Card 2: Total de Doações -->
-                <div class="col-12 col-md-4">
-                    <div class="card shadow border-start border-5 border-info h-100 transition-shadow">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="text-uppercase text-muted small mb-1">Total de Doações</p>
-                                    <h3 class="fw-bolder mb-0 text-info">
-                                        <?php echo $stats['total_doacoes']; ?>
-                                    </h3>
-                                </div>
-                                <i class="bi bi-heart-fill display-6 text-info opacity-75"></i>
+            </div>
+
+            <!-- Card 2: Total de Doações -->
+            <div class="col-12 col-md-4">
+                <div class="card shadow border-start border-5 border-info h-100 transition-shadow">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <p class="text-uppercase text-muted small mb-1">Total de Doações</p>
+                                <h3 class="fw-bolder mb-0 text-info">
+                                    <?php echo $stats['total_doacoes']; ?>
+                                </h3>
                             </div>
-                            <p class="mt-3 text-muted small mb-0">Número total de transações/contribuições realizadas.</p>
+                            <i class="bi bi-heart-fill display-6 text-info opacity-75"></i>
                         </div>
+                        <p class="mt-3 text-muted small mb-0">Número total de transações/contribuições realizadas.</p>
                     </div>
                 </div>
+            </div>
+
                 <!-- Card 3: Média por Doação -->
                 <div class="col-12 col-md-4">
                     <div class="card shadow border-start border-5 border-warning h-100 transition-shadow">
@@ -534,7 +624,7 @@ try {
                         label: "Valor doado (R$)",
                         data: valores1,
                         fill: true,
-                        borderColor: "rgb(75, 192, 192)",
+                        borderColor: "var(--primary)",
                         tension: 0.2,
                         backgroundColor: "rgba(75, 192, 192, 0.3)"
                     }]
@@ -564,7 +654,7 @@ try {
                     datasets: [{
                         data: Object.values(metodos),
                         backgroundColor: [
-                            "rgba(255, 99, 132, 0.7)",
+                            "rgba(16, 245, 35, 0.7)",
                             "rgba(54, 162, 235, 0.7)",
                             "rgba(255, 206, 86, 0.7)",
                             "rgba(75, 192, 192, 0.7)",
@@ -614,9 +704,9 @@ try {
         });
     </script>
 
- <script>
-    
- </script>
+    <script>
+
+    </script>
 </body>
 
 </html>

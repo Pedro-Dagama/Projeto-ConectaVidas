@@ -31,7 +31,7 @@
     </div>
 </footer>
 <script src="/js/bootstrap.bundle.min.js"></script>
-<script src="/js/trocar-dark-light.js"></script>
+<script src="/js/alternarTema.js"></script>
 <script src="/js/perfil-empresa.js"></script>
 </body>
 

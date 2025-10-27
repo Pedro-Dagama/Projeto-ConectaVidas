@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="/css/global.css" />
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <title>ConectaVidas+ — Home</title>
@@ -16,7 +17,7 @@
   <header class="main-header">
     <div class="d-none d-md-flex container-fluid justify-content-between align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
       <a href="#" class="text-decoration-none text-body">
-        <span class="fw-bold fs-1">ConectaVidas+</span>
+        <span style="color:var(--primary);" class="fw-bold fs-1">ConectaVidas+</span>
       </a>
 
       <nav class="d-flex align-items-center gap-4">
@@ -44,7 +45,7 @@
     <!-- HEADER MOBILE -->
     <nav class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none">
       <div class="container-fluid">
-        <a class="navbar-brand fw-bold fs-3" href="#">ConectaVidas+</a>
+        <a style="color:var(--primary);" class="navbar-brand fw-bold fs-3" href="#">ConectaVidas+</a>
         <button
           class="navbar-toggler"
           type="button"

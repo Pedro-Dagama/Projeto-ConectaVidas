@@ -23,7 +23,7 @@
         </div>
 
         <div class="col-md-6 text-center">
-          <img src="https://images.unsplash.com/photo-1534126511673-b6899657816a?w=800&q=60" class="img-fluid rounded shadow-sm" alt="Ilustração ONG" />
+          <img src="/img/co-an-ft5.png" class="img-fluid rounded shadow-sm" alt="Ilustração ONG" />
         </div>
       </div>
     </section>
@@ -34,7 +34,7 @@
       <div class="row g-4 justify-content-center">
         <div class="col-md-4">
           <div class="card shadow-sm border-0 rounded-4">
-            <img src="../../../public/img/co-an-ft1.png" class="card-img-top" alt="Educação" />
+            <img src="/img/co-an-ft1.png" class="card-img-top" alt="Educação" />
             <div class="card-body text-center">
               <h5 class="card-title fw-bold">Educar para o Futuro</h5>
               <p class="card-text text-body-secondary">ONG dedicada a projetos educacionais em comunidades carentes.</p>
@@ -45,7 +45,7 @@
 
         <div class="col-md-4">
           <div class="card shadow-sm border-0 rounded-4">
-            <img src="https://source.unsplash.com/600x400/?animals,rescue" class="card-img-top" alt="Animais" />
+            <img src="/img/co-an-ft1.png" class="card-img-top" alt="Animais" />
             <div class="card-body text-center">
               <h5 class="card-title fw-bold">Amigos de Quatro Patas</h5>
               <p class="card-text text-body-secondary">Cuidando de animais abandonados e promovendo adoção responsável.</p>
@@ -56,7 +56,7 @@
 
         <div class="col-md-4">
           <div class="card shadow-sm border-0 rounded-4">
-            <img src="https://source.unsplash.com/600x400/?environment,trees" class="card-img-top" alt="Meio Ambiente" />
+            <img src="/img/co-an-ft1.png" class="card-img-top" alt="Meio Ambiente" />
             <div class="card-body text-center">
               <h5 class="card-title fw-bold">Verde Esperança</h5>
               <p class="card-text text-body-secondary">Projetos voltados à preservação ambiental e reflorestamento urbano.</p>

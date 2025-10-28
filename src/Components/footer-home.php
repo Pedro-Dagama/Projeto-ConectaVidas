@@ -12,7 +12,7 @@
                 <h6 class="fw-bold">Links úteis</h6>
                 <ul class="list-unstyled">
                     <li>
-                        <a href="#" class="text-body-secondary text-decoration-none">Sobre</a>
+                        <a href="/?url=sobre" class="text-body-secondary text-decoration-none">Sobre</a>
                     </li>
                     <li>
                         <a href="#" class="text-body-secondary text-decoration-none">Campanhas</a>

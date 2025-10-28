@@ -33,6 +33,7 @@
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/alternarTema.js"></script>
 <script src="/js/perfil-empresa.js"></script>
+<script src="/js/alternarTema.js"></script>
 </body>
 
 </html>

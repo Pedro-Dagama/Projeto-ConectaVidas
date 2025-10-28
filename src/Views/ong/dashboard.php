@@ -7,8 +7,69 @@ $ong = $_SESSION['ong'] ?? null;
 $user = $_SESSION['user'] ?? null;
 ?>
 
+<!-- Header -->
+<header class="main-header">
+    <!-- Desktop -->
+    <div class="d-none d-md-flex container-fluid align-items-center py-2 px-4 border-bottom bg-body fixed-top shadow-sm">
+        <div class="d-flex align-items-center me-4">
+            <a href="/?url=home" class="text-decoration-none text-body">
+                <span class="fw-bold fs-1">ConectaVidas+</span>
+            </a>
+        </div>
 
-<?php include __DIR__ . '/../../Components/header-ong.php'; ?>
+        <div class="d-flex align-items-center gap-4 ms-auto">
+            <button class="theme-toggle btn btn-outline-secondary fs-5" title="Alternar Tema">
+                <i class="bi bi-moon-fill"></i>
+            </button>
+
+            <div class="dropdown menu-user p-2" data-bs-theme="light">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-body"
+                    data-bs-toggle="dropdown" aria-expanded="false" id="navOngName">
+                    <span class="me-2 fw-bold fs-5" id="navOngNameText">
+                        <?= htmlspecialchars($ong['nome_fantasia'] ?? 'Nome da ONG') ?>
+                    </span>
+                    <img src="<?= htmlspecialchars($ong['logo'] ?? 'https://picsum.photos/100') ?>"
+                        alt="avatar" width="40" height="40" class="rounded-circle" />
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end fs-5">
+                    <li><a class="dropdown-item" href="/?url=campanha">Gerenciar campanha</a></li>
+                    <li><a class="dropdown-item" href="#">Configurações</a></li>
+                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="dropdown-item" href="/?url=logout">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile -->
+    <nav class="navbar navbar-expand-lg bg-body border-bottom fixed-top shadow-sm d-md-none">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold fs-3" href="#">ConectaVidas+</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarMobile" aria-controls="navbarMobile"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMobile">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-primary w-100 my-2"
+                            data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                            <i class="bi bi-pencil me-2"></i> Editar Perfil
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle btn btn-outline-secondary fs-5" title="Alternar Tema"></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
 
 <!-- Conteúdo -->
 <section class="text-center mt-5 pt-5">
@@ -51,8 +112,10 @@ $user = $_SESSION['user'] ?? null;
                             data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
                             <i class="bi bi-pencil"></i> <span class="d-none d-sm-inline">Editar Perfil</span>
                         </button>
-                        <a href="../campanha/campanha.php" class="btn btn-outline-success">
-                            <i class="bi bi-plus-circle"></i> <span class="d-none d-sm-inline">Nova Campanha</span>
+                        <a href="/?url=campanha">
+                            <button class="btn btn-outline-success">
+                                <i class="bi bi-plus-circle"></i> Gerenciar Campanhas
+                            </button>
                         </a>
                     </div>
                 </div>
@@ -129,43 +192,26 @@ $user = $_SESSION['user'] ?? null;
                 </div>
                 <div class="card-body p-2 p-sm-3">
                     <div class="list-group" id="campaignList">
-                        <?php if (!empty($ong['campaigns']) && count($ong['campaigns']) > 0): ?>
-                            <?php foreach ($ong['campaigns'] as $campanha): ?>
+                        <?php if (!empty($campanhas)): ?>
+                            <?php foreach ($campanhas as $c): ?>
                                 <div class="list-group-item py-3">
-                                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-3">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1 fw-bold">
-                                                <?= htmlspecialchars($campanha['titulo'] ?? 'Sem título') ?>
-                                            </h6>
-                                            <div class="d-flex flex-wrap gap-2 text-secondary small">
-                                                <span>Meta: <strong>R$ <?= number_format($campanha['meta'] ?? 0, 2, ',', '.') ?></strong></span>
-                                                <span>Arrecadado: <strong>R$ <?= number_format($campanha['arrecadado'] ?? 0, 2, ',', '.') ?></strong></span>
-                                                <span>Curtidas: <strong><?= (int)($campanha['curtidas'] ?? 0) ?></strong></span>
-                                            </div>
-                                            <small class="text-muted d-block mt-1">
-                                                Status: <?= htmlspecialchars($campanha['status'] ?? 'Desconhecido') ?> |
-                                                Local: <?= htmlspecialchars($campanha['localizacao'] ?? 'Não informada') ?>
-                                            </small>
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="me-3">
+                                            <h6 class="mb-1 fw-bold"><?= htmlspecialchars($c['titulo']) ?></h6>
+                                            <p class="mb-1 text-secondary">Meta: <strong>R$ <?= number_format((float)$c['meta'], 2, ',', '.') ?></strong> | Arrecadado: <strong>R$ <?= number_format((float)$c['valor_arrecadado'], 2, ',', '.') ?></strong></p>
+                                            <p class="mb-1 text-secondary">Categoria: <strong><?= htmlspecialchars($c['categoria_nome'] ?? '-') ?></strong></p>
+                                            <small class="text-muted">Status: <?= htmlspecialchars($c['status']) ?> | Encerramento: <?= htmlspecialchars(date('d/m/Y', strtotime($c['data_encerramento'] ?? $c['data_criacao']))) ?></small>
                                         </div>
-                                        <div class="d-flex gap-2 flex-wrap">
-                                            <button class="btn btn-outline-primary btn-sm">
-                                                <i class="bi bi-file-text"></i>
-                                            </button>
-                                            <button class="btn btn-outline-success btn-sm">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-outline-danger btn-sm">
-                                                <i class="bi bi-x"></i>
-                                            </button>
+                                        <div class="d-flex flex-column gap-2">
+                                            <a href="/?url=campanha/view&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-primary btn-sm"><i class="bi bi-file-earmark-text"></i> Relatório</a>
+                                            <a href="/?url=campanha/edit&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-success btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>
+                                            <a href="/?url=campanha/close&id=<?= (int)$c['id_campanha'] ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Encerrar esta campanha? Isso não poderá ser desfeito.')"><i class="bi bi-x-circle"></i> Encerrar</a>
                                         </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <div class="text-center text-muted py-4">
-                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                Nenhuma campanha cadastrada.
-                            </div>
+                            <div class="text-center text-muted">Nenhuma campanha cadastrada ainda.</div>
                         <?php endif; ?>
                     </div>
                 </div>

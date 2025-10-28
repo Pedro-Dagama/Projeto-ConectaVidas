@@ -1,7 +1,5 @@
-<!-- Footer  -->
-<footer
-    class="bg-body-tertiary text-body py-2 d-md-block"
-    data-bs-theme="dark">
+<!-- FOOTER -->
+<footer class="bg-body-tertiary text-body py-2 d-md-block" data-bs-theme="dark">
     <div class="container text-center text-md-start small">
         <div class="row">
             <div class="col-md-4 mb-2">
@@ -27,15 +25,14 @@
             </div>
         </div>
         <hr class="my-1 border-body-secondary" />
-        <p class="text-center mb-0 text-body-secondary">
-            &copy; 2025 ConectaVidas+. Todos os direitos reservados.
-        </p>
+        <p class="text-center mb-0 text-body-secondary">&copy; 2025 ConectaVidas+. Todos os direitos reservados.</p>
     </div>
 </footer>
+
+<!-- Scripts -->
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/trocar-dark-light.js"></script>
-<script src="/js/perfil-empresa.js"></script>
-<script src="/js/alternarTema.js"></script>
+<script src="/js/doacao.js"></script>
 </body>
 
 </html>

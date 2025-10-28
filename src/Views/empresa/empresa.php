@@ -206,17 +206,65 @@ $accountLimit = $empresa['account_limit'] ?? 'R$ 5.000,00';
 
             <section class="card saldo-card shadow-sm mb-4">
                 <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
-                    <div>
-                        <h5 class="fw-bold mb-1">Conta Empresarial</h5>
-                        <p class="mb-0">Número da conta: <strong id="accountNumber"><?= htmlspecialchars($accountNumber) ?></strong></p>
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+                        <div class="d-flex flex-column">
+                           
+
+                            <h5 class="fw-bold mb-1">Conta Empresarial</h5>
+                            <p class="mb-0">Número da conta: <strong id="accountNumber"><?= htmlspecialchars($accountNumber) ?></strong></p>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h3 class="fw-bold mb-0" id="accountBalance"><?= htmlspecialchars($accountBalance) ?></h3>
+                            <small id="accountLimit">Limite de crédito: <?= htmlspecialchars($accountLimit) ?></small>
+                        </div>
                     </div>
-                    <div class="text-end mt-3 mt-md-0">
-                        <h3 class="fw-bold mb-0" id="accountBalance"><?= htmlspecialchars($accountBalance) ?></h3>
-                        <small id="accountLimit">Limite de crédito: <?= htmlspecialchars($accountLimit) ?></small>
+
+                    <div class="d-flex flex-column align-items-end">
+                        <button class="btn btn-outline-primary mb-2" data-bs-toggle="modal" data-bs-target="#editarContaModal">
+                            <i class="bi bi-pencil"></i> Editar
+                        </button>
                     </div>
                 </div>
+
             </section>
         </div>
+
+        <!-- Modal: Editar Conta Empresarial -->
+        <div class="modal fade" id="editarContaModal" tabindex="-1" aria-labelledby="editarContaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <form class="modal-content" id="editarContaForm" method="POST" action="/?url=empresa/update_conta">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarContaModalLabel">Editar Conta Empresarial</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="numero_conta_edit" class="form-label">Número da Conta</label>
+                                <input type="text" class="form-control" id="numero_conta_edit" name="numero_conta" value="<?= htmlspecialchars($accountNumber) ?>" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tipo_conta_edit" class="form-label">Tipo de Conta</label>
+                                <input type="text" class="form-control" id="tipo_conta_edit" name="tipo_conta" value="empresa" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="limite_conta_edit" class="form-label">Limite de Crédito (R$)</label>
+                                <input type="text" class="form-control" id="limite_conta_edit" name="limite_conta" value="<?= htmlspecialchars($accountLimit) ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="saldo_edit" class="form-label">Saldo Atual (R$)</label>
+                                <input type="text" class="form-control" id="saldo_edit" name="saldo" value="<?= htmlspecialchars($accountBalance) ?>" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/?url=empresa" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
 
         <!-- Histórico de Doações -->
         <div class="col-12 col-md-5">

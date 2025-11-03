@@ -30,7 +30,7 @@ function fmt_money($v)
 
 <main class="container mt-5 pt-5">
     <div class="text-center mb-4">
-        <h1 class="fw-bold display-5 mt-4">Histórico de Doações</h1>
+        <h1 class="fw-bold display-5 mt-4 text-primary">Histórico de Doações</h1>
         <p class="text-muted fs-5">Acompanhe todas as doações recebidas por suas campanhas.</p>
     </div>
     <div class="d-flex justify-content-between align-items-center mb-4">

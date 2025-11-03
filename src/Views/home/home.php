@@ -105,4 +105,4 @@
   </section>
 </main>
 
-<?php include __DIR__ . '/../../Components/footer-home.php'; ?>
+<?php include __DIR__ . '/../../Components/footer.php'; ?>

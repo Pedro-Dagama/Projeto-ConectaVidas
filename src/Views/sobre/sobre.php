@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../../Components/header-home.php'; ?> 
+<?php include __DIR__ . '/../../Components/header-sobre.php'; ?> 
 
 <main class="flex-grow-1 pt-5 mt-5">
 

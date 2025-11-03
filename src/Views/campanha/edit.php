@@ -101,4 +101,4 @@ if (empty($campanha)) {
     </div>
 </main>
 
-<?php include __DIR__ . '/../../Components/footer-campanha.php'; ?>
+<?php include __DIR__ . '/../../Components/footer.php'; ?>

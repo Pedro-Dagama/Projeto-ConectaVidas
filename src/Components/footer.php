@@ -1,7 +1,5 @@
 <!-- Footer  -->
-<footer
-    class="bg-body-tertiary text-body py-2 d-md-block"
-    data-bs-theme="dark">
+<footer class="bg-body-tertiary text-body py-2 mt-auto" data-bs-theme="dark">
     <div class="container text-center text-md-start small">
         <div class="row">
             <div class="col-md-4 mb-2">

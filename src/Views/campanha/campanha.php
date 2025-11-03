@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 <!-- Conteúdo -->
 <section class="text-center mt-5 pt-5">
-    <h1 class="fw-bold display-5 mt-4">Gerenciar Campanhas</h1>
+    <h1 class="fw-bold display-5 mt-4 text-primary">Gerenciar Campanhas</h1>
     <p class="text-muted fs-5">Crie novas campanhas, acompanhe arrecadações e gerencie suas ações sociais.</p>
 </section>
 
@@ -143,4 +143,4 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
     </div>
 </main>
-<?php include __DIR__ . '/../../Components/footer-campanha.php'; ?>
+<?php include __DIR__ . '/../../Components/footer.php'; ?>

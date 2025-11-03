@@ -23,7 +23,7 @@
       </div>
 
       <div class="col-md-6 text-center">
-        <img src="https://images.unsplash.com/photo-1534126511673-b6899657816a?w=800&q=60" class="img-fluid rounded shadow-sm" alt="Ilustração ONG" />
+        <img src="/img/co-an-ft5.png" class="img-fluid rounded shadow-sm" alt="Ilustração ONG" />
       </div>
     </div>
   </section>
